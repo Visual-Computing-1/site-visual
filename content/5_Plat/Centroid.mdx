@@ -1,0 +1,406 @@
+---
+id: centroid
+title: 'Centroid Decomposition'
+author: Siyong Huang, Benjamin Qi
+prerequisites:
+  - intro-tree
+description: 'Decomposing a tree to facilitate path computations.'
+frequency: 1
+---
+
+<!--
+
+TODO:
+ - Add more resources
+
+-->
+
+## Introduction
+
+### Centroids
+
+A **centroid** of a tree is defined as a node such that when the tree is rooted
+at it, no other nodes have a subtree of size greater than $\frac{N}{2}$.
+
+<FocusProblem problem="sam" />
+
+We can find a centroid in a tree by starting at the root. Each step, loop
+through all of its children. If all of its children have subtree size less than
+or equal to $\frac{N}{2}$, then it is a centroid. Otherwise, move to the child
+with a subtree size that is more than $\frac{N}{2}$ and repeat until you find a
+centroid.
+
+
+
+
+
+### Implementation
+
+<LanguageSection>
+
+<CPPSection>
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 200010;
+
+int n;
+vector <int> adj[maxn];
+int subtree_size[maxn];
+
+int get_subtree_size(int node, int par = -1) {
+	int& res = subtree_size[node];
+	res = 1;
+	for (int i : adj[node]) {
+		if (i == par) continue;
+		res += get_subtree_size(i, node);
+	}
+	return res;
+}
+
+int get_centroid(int node, int par = -1) {
+	for (int i : adj[node]) {
+		if (i == par) continue;
+
+		if (subtree_size[i] * 2 > n) {
+			return get_centroid(i, node);
+		}
+	}
+	return node;
+}
+
+int main() {
+	cin >> n;
+	for (int i = 0; i < n - 1; i++) {
+		int a, b;
+		cin >> a >> b;
+		a--; b--;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+
+	get_subtree_size(0);
+	cout << get_centroid(0) + 1 << endl;
+}
+```
+
+</CPPSection>
+
+<JavaSection>
+
+```java
+import java.io.*;
+import java.util.*;
+
+public class FindCentroid {
+	public static int[] subSize;
+	public static List<Integer>[] adj;
+	public static int N;
+
+	public static void main(String[] args) {
+		Kattio io = new Kattio();
+		N = io.nextInt();
+		adj = new List[N];
+		for (int i = 0; i < N; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		subSize = new int[N];
+
+		for (int i = 0; i < N - 1; i++) {
+			int a = io.nextInt() - 1;
+			int b = io.nextInt() - 1;
+			adj[a].add(b);
+			adj[b].add(a);
+		}
+
+		subtreeSize(0, -1);
+		io.println(getCentroid(0, -1) + 1);
+		io.close();
+
+	}
+
+	// Find the size of the subtree under this node.
+	public static int subtreeSize(int node, int par) {
+		int res = 1;
+		for (int next : adj[node]) {
+			if (next == par) {
+				continue;
+			}
+			res += subtreeSize(next, node);
+		}
+		return (subSize[node] = res);
+	}
+
+	// Find the centroid of the tree (the subtree with <= N/2 nodes)
+	public static int getCentroid(int node, int par) {
+		for (int next : adj[node]) {
+			if (next == par) {
+				continue;
+			}
+			// Keep searching for the centroid if there are subtrees with more than N/2 nodes.
+			if (subSize[next] * 2 > N) {
+				return getCentroid(next, node);
+			}
+		}
+		return node;
+	}
+	//CodeSnip{Kattio}
+}
+```
+
+</JavaSection>
+
+</LanguageSection>
+
+### Centroid decomposition
+
+<FocusProblem problem="sam2" />
+
+**Centroid Decomposition** is a divide and conquer technique for trees.
+**Centroid Decomposition** works by repeated splitting the tree and each of the
+resulting subgraphs at the centroid, producing $\mathcal{O}(\log N)$ layers of
+subgraphs.
+
+<Resources>
+	<Resource
+		source="Carpanese"
+		title="Illustrated Intro to Centroid Decomposition"
+		url="https://medium.com/carpanese/an-illustrated-introduction-to-centroid-decomposition-8c1989d53308"
+		starred
+	>
+		how to solve above problem
+	</Resource>
+	<Resource
+		source="CF"
+		title="galen_colin - Centroid Decomposition"
+		url="https://codeforces.com/blog/entry/81661"
+	>
+		blog + video for above problem. LCA isn't necessary though.
+	</Resource>
+	<Resource
+		source="GFG"
+		title="Centroid Decomposition of Tree"
+		url="centroid-decomposition-of-tree"
+	 />
+</Resources>
+
+## Implementation
+
+General centroid code is shown below.
+
+<IncompleteSection>
+
+Ben - this is not easy to understand :/
+
+</IncompleteSection>
+
+<LanguageSection>
+
+<CPPSection>
+
+<!-- pulled from https://codeforces.com/contest/1303/submission/76216413, which I think is my most recent centroid problem -->
+
+```cpp
+bool r[MN];//removed
+int s[MN];//subtree size
+int dfs(int n, int p = 0)
+{
+	s[n] = 1;
+	for(int x : a[n])
+		if(x != p && !r[x])
+			s[n] += dfs(x, n);
+	return s[n];
+}
+int get_centroid(int n, int ms, int p = 0)//n = node, ms = size of tree, p = parent
+{
+	for(int x : a[n])
+		if(x != p && !r[x])
+			if(s[x]*2 > ms)
+				return get_centroid(x, ms, n);
+	return n;
+}
+void centroid(int n = 1)
+{
+	int C = get_centroid(n, dfs(n));
+
+	//do something
+
+	r[C] = 1;
+	for(int x : a[C])
+		if(!r[x])
+			centroid(x);
+}
+```
+
+</CPPSection>
+
+<JavaSection>
+
+<!-- I used the code on a successful submission to "Xenia and Tree" https://codeforces.com/contest/342/submission/113088188 -->
+
+```java
+private static class Centroid {
+	int n;
+	int[][] g;
+	int[] size;
+	int[] parent;
+	boolean[] seen;
+
+	Centroid(int n, int[][] g) {
+		this.n = n;
+		this.g = g;
+		size = new int[n];
+		parent = new int[n];
+		seen = new boolean[n];
+		initCentroid(0, -1);
+	}
+
+	private int getSize(int u, int v) {
+		if (seen[u]) {
+			return 0;
+		}
+		size[u] = 1;
+		for (int next : g[u]) {
+			if (next != v) {
+				size[u] += getSize(next, u);
+			}
+		}
+		return size[u];
+	}
+
+	private void initCentroid(int u, int v) {
+		getSize(u, v);
+		final int c = findCentroid(u, -1, size[u]);
+		seen[c] = true;
+		parent[c] = v;
+		for (int next : g[c]) {
+			if (!seen[next]) {
+				initCentroid(next, c);
+			}
+		}
+	}
+
+	private int findCentroid(int u, int v, int currSize) {
+		for (int x : g[u]) {
+			if (x != v) {
+				if (!seen[x] && size[x] > currSize / 2) {
+					return findCentroid(x, u, currSize);
+				}
+			}
+		}
+		return u;
+	}
+}
+```
+
+</JavaSection>
+
+</LanguageSection>
+
+## Solution - Xenia & Tree
+
+```cpp
+#include <cstdio>
+#include <cstring>
+#include <vector>
+
+template<typename T> bool ckmin(T& a, const T& b){return b<a?a=b,1:0;}
+
+const int MN = 1e5+10, INF = 0x3f3f3f3f;
+
+int N, M, s[MN], m[MN][2], t, b, d;
+bool r[MN], red[MN];
+std::vector<int> a[MN], v[MN];
+struct info
+{
+	public:
+		int n,b,d;
+};
+std::vector<info> g[MN];
+
+int dfs(int n, int p=0)
+{
+	s[n]=1;
+	for(auto x:a[n])
+		if(x!=p&&!r[x])
+			s[n]+=dfs(x, n);
+	return s[n];
+}
+int find(int n, int ms, int p=0)
+{
+	for(auto x:a[n])
+		if(!r[x]&&x!=p&&s[x]*2>ms)
+			return find(x, ms, n);
+	return n;
+}
+void dfs2(int n, int p=0)
+{
+	for(auto x:a[n])
+		if(!r[x]&&x!=p)
+			++d, dfs2(x, n), --d;
+	g[n].push_back({t,b,d});
+}
+void centroid(int n=1)
+{
+	n = find(n, dfs(n));
+	v[n].reserve(a[n].size());
+	for(auto x:a[n])
+		if(!r[x])
+		{
+			t=n, b=v[n].size(), d=1;
+			dfs2(x, n);
+			v[n].push_back(INF);
+		}
+	r[n]=1;
+	for(auto x:a[n])
+		if(!r[x])
+			centroid(x);
+}
+
+int main()
+{
+	scanf("%d%d", &N, &M);
+	for(int i=0,u,v;i+1<N;++i)
+		scanf("%d%d", &u, &v), a[u].push_back(v), a[v].push_back(u);
+	centroid();
+	memset(m, 0x3f, sizeof m);
+	for(int i=0,t=1,n=1;i<=M;++i)
+	{
+		if(t==1)
+		{
+			for(auto x:g[n])
+			{
+				int &q=v[x.n][x.b];
+				if(x.d<q)
+				{
+					if(m[x.n][0]==q) m[x.n][0]=x.d;
+					else for(int i=0,u=x.d;i<2;++i) if(u<m[x.n][i]) std::swap(u, m[x.n][i]);
+					q=x.d;
+				}
+			}
+			red[n]=1;
+			m[n][0]=0;
+		}
+		else
+		{
+			int f=m[n][0];
+			for(auto x:g[n])
+				if(x.d)
+					ckmin(f, m[x.n][v[x.n][x.b]==m[x.n][0]]+x.d);
+			printf("%d\n", f);
+		}
+		if(i<M) scanf("%d%d", &t, &n);
+	}
+	return 0;
+}
+```
+
+## Problems
+
+<!-- Note: Unfortunately, it seems like constant factor is especially important for DMOJ.  -->
+
+<Problems problems="general" />

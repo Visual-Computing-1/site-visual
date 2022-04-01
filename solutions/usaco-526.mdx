@@ -1,0 +1,71 @@
+---
+id: usaco-526
+source: USACO Bronze 2015 February
+title: Censoring
+author: Brad Ma
+---
+
+[Official Analysis (C++)](http://www.usaco.org/current/data/sol_censor_bronze.html)
+
+## Implementation
+
+**Time Complexity:** $\mathcal{O}(ST)$
+
+<LanguageSection>
+<PySection>
+
+```py
+import sys
+sys.stdin = open("censor.in", "r")
+sys.stdout = open("censor.out", "w")
+
+s = input().strip()
+t = input().strip()
+final = ""
+# Add each character to the final string
+for char in s:
+	final += char
+	# If the end of the string is t, we remove t from the end
+	if final[-len(t):] == t:
+		final = final[:-len(t)]
+print(final)
+```
+</PySection>
+<JavaSection>
+
+```java
+import java.util.*;
+import java.io.*;
+
+public class Censor {
+	public static void main (String[] args) throws IOException {
+		Kattio io = new Kattio("censor");
+		String string = io.next();
+		String toCensor = io.next();
+
+		// use StringBuilder in Java because it is significantly faster
+		StringBuilder s = new StringBuilder();
+		s.append(string.substring(0, toCensor.length() - 1));
+
+		// try adding one character at a time
+		for (int x = toCensor.length() - 1; x < string.length(); x++) {
+			s = s.append(string.charAt(x));
+			// need to check if our current string is longer than the censored word
+			if (s.length() >= toCensor.length()) {
+				String check = s.substring(s.length() - toCensor.length());
+				// delete the censored word if present
+				if (check.equals(toCensor)) {
+					s.delete(s.length() - toCensor.length(), s.length());
+				}
+			}
+		}
+		io.println(s);
+		io.close();
+	}
+	//CodeSnip{Kattio}
+}
+```
+
+</JavaSection>
+
+</LanguageSection>
