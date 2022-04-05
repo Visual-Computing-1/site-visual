@@ -1,8 +1,16 @@
-import React from "react";
-import { ReactP5Wrapper, P5Instance } from "react-p5-wrapper";
-
+import React from 'react';
+import { P5Instance, ReactP5Wrapper } from 'react-p5-wrapper';
+import image from './manzana.jpg';
 
 function sketch(p5: P5Instance) {
+  p5.setup = () => {
+    // Here, we use a callback to display the image after loading
+    p5.loadImage(image, img => {
+      p5.createCanvas(600, 550, p5.WEBGL);
+      p5.image(img, -300, -300);
+    });
+  };
+
   /*p5.setup = () => p5.createCanvas(600, 400, p5.WEBGL);
 
   p5.draw = () => {
@@ -16,7 +24,7 @@ function sketch(p5: P5Instance) {
     p5.pop();
   };*/
 
-  p5.setup = () => p5.createCanvas(710, 400, p5.WEBGL);
+  /*p5.setup = () => p5.createCanvas(710, 400, p5.WEBGL);
 
   p5.draw = () => {
     p5.background(250);
@@ -69,17 +77,16 @@ function sketch(p5: P5Instance) {
     p5.rotateY(p5.frameCount * 0.01);
     p5.sphere(70);
     p5.pop();
-  }
+  }*/
 }
-
 
 export interface ProcessingProps {
-    title?: string;
-    children: React.ReactNode;
+  title?: string;
+  children: React.ReactNode;
 }
-  
+
 const Processing: React.FC<ProcessingProps> = ({ children, title }) => (
-    <ReactP5Wrapper sketch={sketch} />
+  <ReactP5Wrapper sketch={sketch} />
 );
 
 export default Processing;

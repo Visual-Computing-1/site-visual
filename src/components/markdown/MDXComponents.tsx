@@ -15,12 +15,13 @@ import Optional from './Optional';
 import PrefixSumInteractive from './PrefixSumInteractive';
 import { DivisionList } from './ProblemsList/DivisionList/DivisionList';
 import { ProblemsList } from './ProblemsList/ProblemsList';
+import Processing from './Processing';
 import Quiz from './Quiz';
 import { Resource, ResourcesList } from './ResourcesList';
 import Spoiler from './Spoiler';
+import UploadFile from './UploadFile';
 import Warning from './Warning';
 import Youtube from './Youtube';
-import Processing from './Processing'
 
 const MATHDIV = props => {
   return (
@@ -64,6 +65,7 @@ export const components = {
   MATHDIV,
   Processing,
   MATHSPAN,
+  UploadFile,
 
   ...HTMLComponents,
 };
