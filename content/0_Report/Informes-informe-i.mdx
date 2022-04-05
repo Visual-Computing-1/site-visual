@@ -1,34 +1,122 @@
 ---
 id: informes-i
-title: 'Template de Informe'
+title: 'Corrección de colores para personas que sufren daltonismo dicromático'
 author: Oscar Julián Tinjacá y Luis Miguel Báez
 description:
-  'Computing range sum queries in constant time over a fixed 1D array.'
-prerequisites:
-frequency: 3
+  'Implementación de Algoritmos para la corrección de colores en imagenes'
 ---
 
-## Resources
+## Introducción
 
-<Resources title="Additional">
-	<Resource source="IUSACO" title="11 - Prefix Sums">
-		module is based off this
-	</Resource>
-	<Resource source="CPH" title="9.1 - Sum Queries">
-		rather brief
-	</Resource>
-	<Resource source="PAPS" title="11.2.1 - Prefix Precomputation">
-		also rather brief
-	</Resource>
+El daltonismo es un tipo de deficiencia de la visión del color, que es la capacidad de una persona de no darse cuenta de las diferencias entre algunos colores. Hay tres tipos de daltonismo: Monocromacia, Dicromacia y Tricromacia Anómala. El daltónico no se puede curar. Hoy en día, la tecnología se levanta con soluciones para ayudar a las personas con daltonismo a ver la imagen y distinguir entre los diferentes colores utilizando algunos algoritmos.
+
+El daltonismo afecta aproximadamente a 1 de cada 12 hombres y 1 de cada 200 mujeres en el mundo. La mayoría de las personas con daltonismo tienen la capacidad de ver las cosas tan claramente como otras personas, pero no pueden ver claramente la luz roja, verde o azul.
+
+Hay diferentes causas de daltonismo. Para la mayoría de las personas con deficiencia de la visión del color, la afección es genética y ha sido heredada de su madre. Además, hay algunas enfermedades que causan daltonismo, como la diabetes y la esclerosis múltiple, o que se adquieren con el tiempo debido al proceso de envejecimiento, la medicación, etc
+
+<table>
+    <thead>
+    <tr>
+        <th>Tipo daltónico</th>
+        <th>Causa</th>
+        <th>Efecto</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Monocromatico</td>
+            <td>No hay conos o sólo existe un tipo de cono</td>
+            <td>Incapacidad de ver cualquier color (ver el mundo en tonos grises)</td>
+        </tr>
+        <tr>
+            <td>Dicromatico</td>
+            <td>No existen conos o solo existe un tipo de cono<br />**1)** Protanopia: faltan los conos L<br />**2)** Duteranopia: faltan conos M<br />**3)** Tritanopia: faltan los conos S</td>
+            <td>Incapacidad de ver el color correspondiente al tipo de cono perdido<br />Incapacidad de ver el color rojo (Red Blind)<br />Incapacidad para ver el color verde (Green Blind)<br />Incapacidad para ver el color azul (Blue Blind)</td>
+        </tr>
+        <tr>
+            <td>Tricromacia anómala</td>
+            <td>Existen todos los tipos de conos, pero no están alineados, tres tipos:<br /><br />**1)** Protanomalía: los conos L no están alineados<br />**2)** Dueteranomalía: los conos M no están alineados<br />**3)** Tritanomalía: los conos S no están alineados</td>
+            <td>Reducción de la sensibilidad a un color en particular<br /><br />Menor sensibilidad al color rojo (semana roja)<br />Menor sensibilidad al color verde (semana verde)<br />Menor sensibilidad al color azul (semana azul)</td>
+        </tr>
+    </tbody>
+</table>
+
+## Revisión de la Literatura / Antecedentes
+
+### Algoritmo 1: LMS Daltonización
+
+Entrada: imagen de entrada RGB
+
+Salida: imagen con corrección de color RGB
+
+<Info title="1) Convierta la imagen RGB al espacio de color LMS usando ">
+_la ecuación $(1)$_
+</Info>
+
+$$\begin{pmatrix}L\\ M\\ S\end{pmatrix}_=\begin{pmatrix}17.8824&43.5161&4.11935\\ 3.45565&27.1554&3.86714\\ 0.0299566&0.184309&1.46709\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(1\right)$$
+
+<Info title="2) Simule el daltonismo usando">
+_la ecuación $(2)$ para Protanopia, $(3)$ forma Deuteranopia y $(4)$ para Tritanopia_
+</Info>
+
+$$\begin{pmatrix}L_p\\ \:M_p\\ \:S_p\end{pmatrix}_=\begin{pmatrix}0&2.023445&-2.52581\\ \:0&1&0\\ \:0&0&1\end{pmatrix}\begin{pmatrix}L\\ \:M\\ S\end{pmatrix}\:\:\:\:\left(2\right)$$
+
+$$\begin{pmatrix}L_p\\ \:M_p\\ \:S_p\end{pmatrix}_=\begin{pmatrix}1&0&0\\ \:0.49421&0&1.24827\\ \:0&0&1\end{pmatrix}\begin{pmatrix}L\\ \:M\\ S\end{pmatrix}\:\:\:\:\left(3\right)$$
+
+$$\begin{pmatrix}L_p\\ \:M_p\\ \:S_p\end{pmatrix}_=\begin{pmatrix}1&0&0\\ \:0&1&0\\ \:-0.395913&0.801109&0\end{pmatrix}\begin{pmatrix}L\\ \:M\\ S\end{pmatrix}\:\:\:\:\left(4\right)$$
+
+<Info title="3) Convertir">
+_$L_i M_i S_i$ en $R_i G_i B_i$ usando la ecuación $(5)$, $i=\left\{P,\:D,\:T\right\}$_
+</Info>
+
+
+$$\begin{pmatrix}R_i\\ \:G_i\\ \:B_i\end{pmatrix}_=\begin{pmatrix}0.0809444479&-0.130504409&0.116721066\\ \:0.113614708&-0.0102485335&0.0540193266\\ \:-0.000365296938&-0.00412161469&0.693511405\end{pmatrix}\begin{pmatrix}L_i\\ \:M_i\\ S_i\end{pmatrix}\:\:\:\:\left(5\right)$$
+
+<Info title="4) Encuentre la diferencia entre imágenes originales y simuladas por">
+_Las ecuaciones $(6)$, $(7)$ y $(8)$_
+</Info>
+
+$$D_{R\left(i\right)=R-R_i}\:\:\:\:\:\left(6\right)$$
+
+$$D_{G\left(i\right)=G-G_i}\:\:\:\:\:\left(7\right)$$
+
+$$D_{B\left(i\right)=B-B_i}\:\:\:\:\:\left(8\right)$$
+
+<Info title="5) Cambie los colores hacia el espectro visible multiplicando por matrices de error usando">
+_Las ecuaciones$(9)$ para Protanopia, $(10)$ para Duteranopia y $(11)$ para Tritanopia_
+</Info>
+
+$$\begin{pmatrix}R_{map\left(P\right)}\\ G_{map\left(P\right)}\\ B_{map\left(P\right)}\end{pmatrix}_=\begin{pmatrix}0&0&0\\ \:0.7&1&0\\ \:0.7&0&1\end{pmatrix}\begin{pmatrix}D_{R\left(P\right)}\\ \:D_{G\left(P\right)}\\ D_{B\left(P\right)}\end{pmatrix}\:\:\:\:\left(9\right)$$
+
+$$\begin{pmatrix}R_{map\left(D\right)}\\ G_{map\left(D\right)}\\ B_{map\left(D\right)}\end{pmatrix}_=\begin{pmatrix}0&0&0\\ \:0.7&1&0\\ \:0.7&0&1\end{pmatrix}\begin{pmatrix}D_{R\left(D\right)}\\ \:D_{G\left(D\right)}\\ D_{B\left(D\right)}\end{pmatrix}\:\:\:\:\left(10\right)$$
+
+$$\begin{pmatrix}R_{map\left(T\right)}\\ G_{map\left(T\right)}\\ B_{map\left(T\right)}\end{pmatrix}_=\begin{pmatrix}0&0&0\\ \:0.7&1&0\\ \:0.7&0&1\end{pmatrix}\begin{pmatrix}D_{R\left(T\right)}\\ \:D_{G\left(T\right)}\\ D_{B\left(T\right)}\end{pmatrix}\:\:\:\:\left(11\right)$$
+
+<Info title="6) Agregue colores cambiados a la imagen original usando">
+_Las ecuaciones $(12)$, $(13)$ y $(14)$_
+</Info>
+
+$$R_{F\left(i\right)=R-R_{map\left(i\right)}}\:\:\:\:\:\left(12\right)$$
+
+$$G_{F\left(i\right)=G-G_{map\left(i\right)}}\:\:\:\:\:\left(13\right)$$
+
+$$B_{F\left(i\right)=B-B_{map\left(i\right)}}\:\:\:\:\:\left(14\right)$$
+
+---
+
+El algoritmo LMS en la aplicación desarrollada se implementa para Protanopia, Duteranopia y Tritanopia. Es el algoritmo más famoso utilizado para la corrección del daltonismo. Su idea es utilizar la información perdida en la simulación de daltonismo y usar el espacio de color LMS para compensar los colores que faltan en cada grupo/tipo de conos, largo $(L)$, medio $(M)$ y corto $(S)$ para ser predecible para el espectador. El algoritmo 1 enumera los pasos del algoritmo LMS Daltonization.
+
+En el **paso 5** del algoritmo 1, hay matrices de modificación de errores para _Protanopia_ y _Deuteranopia_, pero no se encuentra una matriz especial para _Tritanopia_. Aunque el trabajo menciona la matriz Tritanopia que convierte el espacio LMS 3D al espacio 2D, no se menciona la matriz Tritanopia de modificación de errores. La misma matriz de modificación de errores de Protanopia se usa también para Tritanopia.
+
+En nuestra implementación, se utiliza una nueva matriz de modificación de error propuesta para tritanopia, como en la ecuación $(11)$
+
+## Referencias Bibliograficas
+
+<Resources title="References">
+    <Resource source="Research Gate" url="https://www.researchgate.net/publication/326626897_Smartphone_Based_Image_Color_Correction_for_Color_Blindness" title="Smartphone Based Image Color Correction for Color Blindness">
+        Lamiaa A. Elrefaei
+    </Resource>
+    <Resource source="davidmathlogic.com" url="https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40-%23ccc0c7" title="Coloring for Colorblindness">
+        David Nichols
+    </Resource>
 </Resources>
-
-## 1D Prefix Sums
-
-Let's say we have a one-indexed integer array $\texttt{arr}$ of size $N$ and we
-want to compute the value of
-
-<Processing title="some" />
-
-$$
-\texttt{arr}[a]+\texttt{arr}[a+1]+\cdots+\texttt{arr}[b]
-$$
