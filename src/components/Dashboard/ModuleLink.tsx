@@ -8,7 +8,6 @@ import { ModuleLinkInfo } from '../../models/module';
 import { FrequencyLabels } from '../Frequency';
 import ModuleFrequencyDots from '../MarkdownLayout/ModuleFrequencyDots';
 import { LinkWithProgress as SidebarLinkWithProgress } from '../MarkdownLayout/SidebarNav/ItemLink';
-import Tooltip from '../Tooltip/Tooltip';
 
 const LinkWithProgress = styled(SidebarLinkWithProgress)`
   &&::after {
@@ -221,7 +220,9 @@ const ModuleLink = ({ link }: { link: ModuleLinkInfo }): JSX.Element => {
           >
             <span className="mr-2 inline-flex items-end">
               {link.title}{' '}
-              {link.isIncomplete ? (
+              {link.isIncomplete
+                ? null
+                : /*
                 <Tooltip content="This module has incomplete sections. Please help! D:">
                   <svg
                     className="h-5 w-5 text-gray-300 group-hover:text-yellow-300 ml-1.5 transition ease-in-out duration-150"
@@ -235,7 +236,8 @@ const ModuleLink = ({ link }: { link: ModuleLinkInfo }): JSX.Element => {
                     />
                   </svg>
                 </Tooltip>
-              ) : null}
+              */
+                  null}
             </span>
           </p>
           {link.frequency !== null && (
