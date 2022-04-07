@@ -23,7 +23,7 @@ const MODULE_ORDERING: { [key in SectionID]: Chapter[] } = {
     },
     {
       name: 'Show Case',
-      items: ['showcase-latex'],
+      items: ['showcase-gatsly'],
     },
     {
       name: 'LOGS',
