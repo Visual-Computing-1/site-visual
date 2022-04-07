@@ -1,0 +1,195 @@
+---
+id: showcase-gatsly
+title: 'Show cases en Gatsly'
+author: Oscar Julián Tinjacá y Luis Miguel Báez
+description:
+  'Latex en Gatsly'
+---
+
+## Ejemplo de Latex
+
+```java
+$$\int _{\:0}^{\infty \:}\int _y^{\infty \:}e^{-x^2}dxdy$$
+```
+
+$$
+\int _{\:0}^{\infty \:}\int _y^{\infty \:}e^{-x^2}dxdy
+$$
+
+```java
+Esta es una formula $\int _{\:0}^{\infty \:}\int _y^{\infty \:}e^{-x^2}dxdy$ inline
+```
+
+Esta es una formula $\int _{\:0}^{\infty \:}\int _y^{\infty \:}e^{-x^2}dxdy$ inline
+
+## Insertar Codigo en una formato legible
+
+Escribir el siguiente codigo sin las `\\`
+```
+  \```java
+  public class Main {
+    int x = 5;
+  }
+  \```
+```
+
+Y obtendrá el siguiente resultado
+```java
+public class Main {
+  int x = 5;
+}
+```
+
+## Componentes globales de React
+
+Algunos componentes están disponibles globalmente en cada módulo (sin tener que importarlos):
+
+* `<Spoiler>`
+* `<Info>`
+* `<Warning>`
+* `<Optional>`
+* `<Problems>`
+* `<FocusProblem>`
+* `<Resources>`
+* `<Resource>`
+* `<TextTooltip>`
+* `<LanguageSection>`
+* `<CPPSection>`
+* `<JavaSection>`
+* `<PySection>`
+* `<IncompleteSection>`
+* `<Asterisk>`
+* `<Quiz>`
+
+Ejemplo de Uso en cualquier archivo .mdx
+
+### Componente `Info`
+```java
+<Info title="Algun Titulo">
+Alguna descripción Importante
+</Info>
+```
+
+<Info title="Algun Titulo">
+Alguna descripción Importante
+</Info>
+
+### Componente `Resources`
+
+```java
+<Resources title="References">
+    <Resource source="Research Gate" url="https://www.researchgate.net/publication/326626897_Smartphone_Based_Image_Color_Correction_for_Color_Blindness" title="Smartphone Based Image Color Correction for Color Blindness">
+        Lamiaa A. Elrefaei
+    </Resource>
+</Resources>
+```
+
+<Resources title="References">
+    <Resource source="Research Gate" url="https://www.researchgate.net/publication/326626897_Smartphone_Based_Image_Color_Correction_for_Color_Blindness" title="Smartphone Based Image Color Correction for Color Blindness">
+        Lamiaa A. Elrefaei
+    </Resource>
+</Resources>
+
+## Embeber animación de p5.js en Gatsly
+
+* Crear un archivo `NombreComponente.tsx` en `src/components/markdown/`
+
+```java
+import React from 'react';
+import { P5Instance, ReactP5Wrapper } from 'react-p5-wrapper';
+
+function sketch(p5: P5Instance) {
+
+  p5.setup = () => {
+    p5.createCanvas(710, 400, p5.WEBGL);
+  }
+
+  p5.draw = () => {
+    p5.background(250);
+    p5.translate(-350, 0, 0);
+    p5.normalMaterial();
+
+    p5.translate(240, 0, 0);
+    p5.push();
+    p5.rotateZ(p5.frameCount * 0.01);
+    p5.rotateX(p5.frameCount * 0.01);
+    p5.rotateY(p5.frameCount * 0.01);
+    p5.box(70, 70, 70);
+    p5.pop();
+
+    p5.translate(240, 0, 0);
+    p5.push();
+    p5.rotateZ(p5.frameCount * 0.01);
+    p5.rotateX(p5.frameCount * 0.01);
+    p5.rotateY(p5.frameCount * 0.01);
+    p5.torus(70, 20);
+    p5.pop();
+  }
+}
+
+export interface Example3DComponentProps {
+  children: React.ReactNode;
+}
+
+const Example3DComponent: React.FC<Example3DComponentProps> = ({ children }) => (
+  <ReactP5Wrapper sketch={sketch} />
+);
+
+export default Example3DComponent;
+```
+
+En el archivo  `src/components/markdown/MDXComponents.tsx` debe importar el componente y lo exportas de la siguiente manera
+
+```java
+import Example3DComponent from './Example3DComponent'
+
+export const components = {
+  Spoiler,
+  ...
+  Example3DComponent,
+};
+```
+
+Y luego de esto ya puedes importar el componente en cualquier archivo `.mdx` de la siguiente manera
+
+### Ejemplo de Componente 3D
+
+```java
+<Example3DComponent />
+```
+
+<Example3DComponent />
+
+### Ejemplo de p5.js en 2D
+
+```java
+<Example2DComponent />
+```
+
+<Example2DComponent />
+
+### Ejemplo de Articulo usando Markdown x
+
+```cpp
+---
+id: showcase-about-template
+title: 'About Template'
+author: Oscar Julián Tinjacá y Luis Miguel Báez
+description:
+  'Información sobre el Template'
+---
+
+# Gatsby Framework
+
+![Gatsby](https://www.mparticle.com/static/2c7bb20b58d63a79eed76c41aefe3a0d/4621d/b7580def-408d-4c83-8a14-c41846e9ba36_Gatsby-1.webp)
+
+* **React.js:** librería _Open Source_ para desarrollar interfaces de usuario
+* **Webpack:** libreria _Open Source_ que permite hacer **transpilación** de codigo en javascript
+* **Graph QL:** lenguaje de consultas
+
+* **Gatsby:** Es un framework _Open Source_ que permite crear paginas estaticas pero hacia el usuario final recibe una experiencia de paginas dinamica.
+
+### Template Extraido desde [🔗 usaco.guide](https://usaco.guide/)
+
+![Usaco.org](https://images.ctfassets.net/mrop88jh71hl/3NEfiekS1me0rqHfiHFz38/7566e5c54c9e374d3996f47e563833c1/Frame_35-min.png)
+```
