@@ -32,7 +32,7 @@
         "develop": "^1.0.0",
         "diff-match-patch": "^1.0.5",
         "firebase": "9.6.1",
-        "gatsby": "^4.3.0",
+        "gatsby": "^4.7.2",
         "gatsby-image": "^3.11.0",
         "gatsby-plugin-algolia": "^0.24.0",
         "gatsby-plugin-catch-links": "^4.3.0",
