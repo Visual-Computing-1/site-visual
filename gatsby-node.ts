@@ -14,7 +14,7 @@ const { execSync } = require('child_process');
 // Questionable hack to get full commit history so that timestamps work
 try {
   execSync(
-    `git fetch --unshallow https://github.com/cpinitiative/usaco-guide.git`
+    `git fetch --unshallow https://github.com/Visual-Computing-1/visual-site.git`
   );
 } catch (e) {
   console.warn(

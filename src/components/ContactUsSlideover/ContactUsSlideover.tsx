@@ -168,7 +168,7 @@ export default function ContactUsSlideover({
           Contact us about anything: suggestions, bugs, assistance, and more!
           This will be submitted as a public{' '}
           <a
-            href="https://github.com/cpinitiative/usaco-guide/issues"
+            href="https://github.com/Visual-Computing-1/visual-site/issues"
             target="_blank"
             rel="noreferrer"
             className="underline"

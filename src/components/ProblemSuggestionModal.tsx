@@ -455,7 +455,7 @@ export default function ProblemSuggestionModal({
                 <br />
                 This will be submitted as a public{' '}
                 <a
-                  href="https://github.com/cpinitiative/usaco-guide/pulls"
+                  href="https://github.com/Visual-Computing-1/visual-site/pulls"
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-600 dark:text-blue-300 underline"

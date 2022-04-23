@@ -6,7 +6,7 @@ export const IncompleteSection: React.FC = ({ children }) => {
     <Danger title="This section is not complete.">
       Any help would be appreciated! Just submit a Pull Request on{' '}
       <a
-        href="https://github.com/cpinitiative/usaco-guide"
+        href="https://github.com/Visual-Computing-1/visual-site"
         target="_blank"
         rel="noreferrer"
       >

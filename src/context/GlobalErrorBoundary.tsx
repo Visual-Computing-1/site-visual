@@ -25,7 +25,7 @@ const GlobalErrorBoundary = ({ children }) => {
             </a>{' '}
             or{' '}
             <a
-              href="https://github.com/cpinitiative/usaco-guide/issues"
+              href="https://github.com/Visual-Computing-1/visual-site/issues"
               target="_blank"
               className="text-blue-600 underline dark:text-blue-400"
               rel="noreferrer"

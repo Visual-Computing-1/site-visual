@@ -149,6 +149,7 @@ const plugins = [
 ];
 
 module.exports = {
+  pathPrefix: '/visual-site',
   flags,
   siteMetadata,
   plugins,

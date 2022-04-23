@@ -88,7 +88,7 @@ export const EditorTopNav = (): JSX.Element => {
         )}
         {activeFile?.path && (
           <a
-            href={`https://github.com/cpinitiative/usaco-guide/blob/master/${encodeURI(
+            href={`https://github.com/Visual-Computing-1/visual-site/blob/master/${encodeURI(
               activeFile?.path
             )}`}
             target="_blank"
