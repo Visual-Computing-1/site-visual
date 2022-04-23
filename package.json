@@ -148,7 +148,7 @@
     },
     "license": "MIT",
     "scripts": {
-      "build": "cp ./content/problems.schema.json ./static/problems.schema.json && gatsby build",
+      "build": "cp ./content/problems.schema.json ./static/problems.schema.json && gatsby develop",
       "develop": "gatsby develop",
       "format": "prettier --write .",
       "lint": "npm run eslint",
