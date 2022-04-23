@@ -150,7 +150,7 @@
     "license": "MIT",
     "scripts": {
         "deploy": "gatsby build --prefix-paths && gh-pages -d public",
-        "build": "cp ./content/problems.schema.json ./static/problems.schema.json && gatsby build",
+        "build": "gatsby build",
         "develop": "gatsby develop",
         "format": "prettier --write .",
         "lint": "npm run eslint",
