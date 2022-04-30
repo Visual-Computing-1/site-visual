@@ -1,10 +1,17 @@
 import React from 'react';
-import { P5Instance, ReactP5Wrapper } from 'react-p5-wrapper';
 import image from './bandera.jpg';
 import image2 from './some.png';
+// import { P5Instance } from 'react-p5-wrapper';
+
+const ReactP5Wrapper = React.lazy(() =>
+  import('react-p5-wrapper').then(module => ({
+    default: module.ReactP5Wrapper,
+  }))
+);
+
 /* eslint no-var: off */
 
-function sketch(p5: P5Instance) {
+function sketch(p5) {
   const CVDMatrix = {
     // Color Vision Deficiency
     Protanope: [
@@ -160,8 +167,18 @@ export interface ProcessingProps {
   children: React.ReactNode;
 }
 
-const Processing: React.FC<ProcessingProps> = ({ title }) => (
-  <ReactP5Wrapper sketch={sketch} />
-);
+const Processing: React.FC<ProcessingProps> = ({ title }) => {
+  const isSSR = typeof window === 'undefined';
+
+  return (
+    <>
+      {!isSSR && (
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <ReactP5Wrapper sketch={sketch} />
+        </React.Suspense>
+      )}
+    </>
+  );
+};
 
 export default Processing;

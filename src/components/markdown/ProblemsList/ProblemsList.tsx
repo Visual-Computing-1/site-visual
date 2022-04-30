@@ -77,7 +77,7 @@ export function ProblemsList(unannotatedProps: ProblemsListProps): JSX.Element {
 
   const shouldShowSolvePercentage =
     props.isDivisionTable &&
-    props.problems.some(problem => !!problem.percentageSolved);
+    props?.problems?.some(problem => !!problem?.percentageSolved);
 
   const { inEditor } = useContext(EditorContext);
   const path = globalHistory.location.pathname || '';
@@ -110,7 +110,7 @@ export function ProblemsList(unannotatedProps: ProblemsListProps): JSX.Element {
               </thead>
               <tbody className="table-alternating-stripes">
                 {props.isDivisionTable === true &&
-                  props.problems.map((problem: DivisionProblemInfo) => {
+                  props.problems?.map((problem: DivisionProblemInfo) => {
                     return (
                       <ProblemsListItem
                         key={problem.uniqueId}
@@ -129,7 +129,7 @@ export function ProblemsList(unannotatedProps: ProblemsListProps): JSX.Element {
                   })}
                 {props.isDivisionTable === false && (
                   <>
-                    {props.problems.map((problem: ProblemInfo) => (
+                    {props.problems?.map((problem: ProblemInfo) => (
                       <ProblemsListItem
                         key={problem.uniqueId}
                         problem={problem}

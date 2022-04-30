@@ -1,7 +1,13 @@
 import React from 'react';
-import { P5Instance, ReactP5Wrapper } from 'react-p5-wrapper';
+// import { P5Instance } from 'react-p5-wrapper';
 
-function sketch(p5: P5Instance) {
+const ReactP5Wrapper = React.lazy(() =>
+  import('react-p5-wrapper').then(module => ({
+    default: module.ReactP5Wrapper,
+  }))
+);
+
+function sketch(p5) {
   p5.setup = () => p5.createCanvas(710, 400, p5.WEBGL);
 
   p5.draw = () => {
@@ -32,8 +38,18 @@ export interface Example3DComponentProps {
   children: React.ReactNode;
 }
 
-const Example3DComponent: React.FC<Example3DComponentProps> = () => (
-  <ReactP5Wrapper sketch={sketch} />
-);
+const Example3DComponent: React.FC<Example3DComponentProps> = () => {
+  const isSSR = typeof window === 'undefined';
+
+  return (
+    <>
+      {!isSSR && (
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <ReactP5Wrapper sketch={sketch} />
+        </React.Suspense>
+      )}
+    </>
+  );
+};
 
 export default Example3DComponent;

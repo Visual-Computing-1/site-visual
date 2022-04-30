@@ -213,6 +213,8 @@ export function DivisionList(props): JSX.Element {
   }
 
   for (const division of divisions) {
+    if (!contestToPoints[division]) continue;
+
     for (const contest of Object.keys(contestToPoints[division])) {
       contestToFraction[division][contest] = [];
       if (contestToPoints[division][contest]) {
@@ -224,6 +226,7 @@ export function DivisionList(props): JSX.Element {
   }
 
   for (const division of divisions) {
+    if (!divToProbs[division]) continue;
     for (const probInfo of divToProbs[division]) {
       const contest = probInfo[1];
       let fraction = null;
@@ -301,7 +304,9 @@ export function DivisionList(props): JSX.Element {
   const problems: DivisionProblemInfo[] =
     divisionToSeasonToProbs[curDivision][curSeason];
 
-  const someHavePercent = problems.some(problem => !!problem.percentageSolved);
+  const someHavePercent = problems?.some(
+    problem => !!problem?.percentageSolved
+  );
   const sortOrders = ['By Contest'];
   if (someHavePercent) sortOrders.push('By Percent');
   const [sortOrder, setSortOrder] = React.useState('Sort: ' + sortOrders[0]);

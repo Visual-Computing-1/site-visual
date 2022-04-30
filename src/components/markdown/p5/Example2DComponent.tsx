@@ -1,7 +1,13 @@
 import React from 'react';
-import { P5Instance, ReactP5Wrapper } from 'react-p5-wrapper';
+// import { P5Instance } from 'react-p5-wrapper';
 
-function sketch(p5: P5Instance) {
+const ReactP5Wrapper = React.lazy(() =>
+  import('react-p5-wrapper').then(module => ({
+    default: module.ReactP5Wrapper,
+  }))
+);
+
+function sketch(p5) {
   let bx;
   let by;
   const boxSize = 75;
@@ -70,8 +76,18 @@ export interface Example2DComponentProps {
   children: React.ReactNode;
 }
 
-const Example2DComponent: React.FC<Example2DComponentProps> = () => (
-  <ReactP5Wrapper sketch={sketch} />
-);
+const Example2DComponent: React.FC<Example2DComponentProps> = () => {
+  const isSSR = typeof window === 'undefined';
+
+  return (
+    <>
+      {!isSSR && (
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <ReactP5Wrapper sketch={sketch} />
+        </React.Suspense>
+      )}
+    </>
+  );
+};
 
 export default Example2DComponent;
