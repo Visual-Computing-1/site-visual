@@ -83,6 +83,7 @@
     "react-instantsearch-dom": "^6.12.1",
     "react-markdown": "^7.0.1",
     "react-p5-wrapper": "^3.2.1",
+    "react-script-tag": "^1.1.2",
     "react-select": "^4.3.1",
     "react-share": "^4.4.0",
     "react-simplemde-editor": "4.1.3",
@@ -176,8 +177,8 @@
     "url": "https://github.com/Visual-Computing-1/visual-site/issues"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": "eslint",
-    "*.{js,jsx,ts,tsx,json,md,mdx}": "prettier --write"
+    "*.{ts,jsx,tsx}": "eslint",
+    "*.{jsx,ts,tsx,json,md,mdx}": "prettier --write"
   },
   "babelMacros": {
     "twin": {

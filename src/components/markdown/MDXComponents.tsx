@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ScriptTag from 'react-script-tag';
 import Asterisk from '../Tooltip/Asterisk';
 import TextTooltip from '../Tooltip/TextTooltip';
 import FocusProblem from './FocusProblem';
@@ -12,7 +13,6 @@ import {
   PySection,
 } from './LanguageSection';
 import Optional from './Optional';
-import Example2DComponent from './p5/Example2DComponent';
 import Example3DComponent from './p5/Example3DComponent';
 import PrefixSumInteractive from './PrefixSumInteractive';
 import { DivisionList } from './ProblemsList/DivisionList/DivisionList';
@@ -69,7 +69,7 @@ export const components = {
   MATHSPAN,
   UploadFile,
   Example3DComponent,
-  Example2DComponent,
+  ScriptTag,
 
   ...HTMLComponents,
 };

@@ -18,6 +18,10 @@ export default function HTML(props) {
         {/*/>*/}
         {/* End Appzi */}
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/addons/p5.sound.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/VisualComputing/p5.treegl/p5.treegl.js"></script>
+
         <div
           dangerouslySetInnerHTML={{
             __html: `<link
