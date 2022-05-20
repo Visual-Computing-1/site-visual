@@ -8,7 +8,7 @@ const siteMetadata = {
   title: `Computación Visual - UNAL 2022-I`,
   description: `A free collection of curated, high-quality competitive programming resources to take you from USACO Bronze to USACO Platinum and beyond. Written by top USACO Finalists, these tutorials will guide you through your competitive programming journey.`,
   author: `@UNALOficial`,
-  siteUrl: `http://localhost:8000/`,
+  siteUrl: `https://visual-computing-1.github.io/visual-site/`,
   keywords: ['Computación Visual', 'Computing Vision'],
 };
 
