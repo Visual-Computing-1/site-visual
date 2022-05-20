@@ -3,9 +3,9 @@ const RasterizationHighLevel = (sketch) => {
     var idx = 0;
     var theta = 0;
 
-    var basket =  '/js/rasterization/img/basket-ball.jpg';
-    var beisbol = '/js/rasterization/img/beisbol.jpg';
-    var tenis =   '/js/rasterization/img/tenis-ball.jpg';
+    var basket =  'https://visual-computing-1.github.io/visual-site/js/rasterization/img/basket-ball.jpg';
+    var beisbol = 'https://visual-computing-1.github.io/visual-site/js/rasterization/img/beisbol.jpg';
+    var tenis =   'https://visual-computing-1.github.io/visual-site/js/rasterization/img/tenis-ball.jpg';
 
     sketch.preload = () => {
         img[0] = sketch.loadImage(tenis);
