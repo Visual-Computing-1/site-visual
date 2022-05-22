@@ -1,4 +1,7 @@
-const Brush3d = (p5) => {
+const Brush3d = (sketch) => {
+
+    var camES = ""
+
     let color;
     let depth;
     let brush;
@@ -18,19 +21,19 @@ const Brush3d = (p5) => {
     let record = false;
 
 
-    p5.setup = () => {
-        p5.createCanvas(600, 450, p5.WEBGL);
+    sketch.setup = () => {
+        sketch.createCanvas(600, 450, sketch.WEBGL);
         // easycam stuff
         let state = {
             distance: 250, // scalar
             center: [0, 0, 0], // vector
             rotation: [0, 0, 0, 1], // quaternion
         };
-        easycam = new createEasyCam();
+        /*easycam = new createEasyCam();
         easycam.state_reset = state; // state to use on reset (double-click/tap)
         easycam.setState(state, 2000); // now animate to that state
-        escorzo = true;
-        //p5.perspective();
+        escorzo = true;*/
+        //sketch.perspective();
         window.addEventListener("gamepadconnected", function(e) {
             gamepadHandler(e, true);
             console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
@@ -49,27 +52,27 @@ const Brush3d = (p5) => {
     };
 
     function sphereBrush(point) {
-        p5.push();
-        p5.noStroke();
+        sketch.push();
+        sketch.noStroke();
         // TODO parameterize sphere radius and / or
         // alpha channel according to gesture speed
-        p5.fill(point.color);
-        p5.sphere(1);
-        p5.pop();
+        sketch.fill(point.color);
+        sketch.sphere(1);
+        sketch.pop();
     }
-    p5.draw = () => {
+    sketch.draw = () => {
         update();
-        p5.background(120);
-        p5.push();
-        p5.strokeWeight(0.8);
-        //p5.grid({ dotted: false });
-        p5.pop();
-        //p5.axes();
+        sketch.background(120);
+        sketch.push();
+        sketch.strokeWeight(0.8);
+        //sketch.grid({ dotted: false });
+        sketch.pop();
+        //sketch.axes();
         for (const point of points) {
-            p5.push();
-            p5.translate(point.worldPosition);
+            sketch.push();
+            sketch.translate(point.worldPosition);
             brush(point);
-            p5.pop();
+            sketch.pop();
 
         }
 
@@ -99,10 +102,10 @@ const Brush3d = (p5) => {
                     points = [];
                 }
                 if (buttonPressed(controller.buttons[0])) {
-                    if (p5.millis() - timeAux > 500) {
+                    if (sketch.millis() - timeAux > 500) {
                         escorzo = !escorzo;
                         escorzo ? perspective() : ortho();
-                        timeAux = p5.millis()
+                        timeAux = sketch.millis()
                     }
                 }
             }
@@ -146,7 +149,7 @@ const Brush3d = (p5) => {
     function gamepadHandler(event, connecting) {
         let gamepad = event.gamepad;
         if (connecting) {
-            p5.print("Connecting to controller " + gamepad.index)
+            sketch.print("Connecting to controller " + gamepad.index)
             controllers[gamepad.index] = gamepad
         } else {
             delete controllers[gamepad.index]
@@ -155,4 +158,4 @@ const Brush3d = (p5) => {
 
 }
 
-let p5Brush3d = new p5(Brush3d, document.getElementById('Brush3d'));
+let sketchBrush3d = new sketch(Brush3d, document.getElementById('Brush3d'));
