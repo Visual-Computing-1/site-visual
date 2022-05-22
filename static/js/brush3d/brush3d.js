@@ -154,3 +154,5 @@ const Brush3d = (p5) => {
     }
 
 }
+
+let p5Brush3d = new p5(Brush3d, document.getElementById('Brush3d'));
