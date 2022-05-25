@@ -1,8 +1,9 @@
-const Brush3d = (sketch) => {
 
     let color;
     let depth;
     let brush;
+    let colors = ['gray','blue','red','green','#00ff00','#5E2129','#800080','orange']
+    let colorA = 'gray';
     let X0 = 0;
     let Y0 = 0;
     let X1 = 0;
@@ -13,25 +14,25 @@ const Brush3d = (sketch) => {
     let controllers = [];
     let easycam;
     let state;
-
+    let auxChangeColor = 0;
     let escorzo;
     let points;
     let record = false;
 
 
-    sketch.setup = () => {
-        sketch.createCanvas(600, 450, sketch.WEBGL);
+    function setup(){
+        createCanvas(600, 450, WEBGL);
         // easycam stuff
         let state = {
             distance: 250, // scalar
             center: [0, 0, 0], // vector
             rotation: [0, 0, 0, 1], // quaternion
         };
-        easycam = sketch.createEasyCam();
+        easycam = createEasyCam();
         easycam.state_reset = state; // state to use on reset (double-click/tap)
         easycam.setState(state, 2000); // now animate to that state
         escorzo = true;
-        //sketch.perspective();
+        //perspective();
         window.addEventListener("gamepadconnected", function(e) {
             gamepadHandler(e, true);
             console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
@@ -50,27 +51,27 @@ const Brush3d = (sketch) => {
     };
 
     function sphereBrush(point) {
-        sketch.push();
-        sketch.noStroke();
+        push();
+        noStroke();
         // TODO parameterize sphere radius and / or
         // alpha channel according to gesture speed
-        sketch.fill(point.color);
-        sketch.sphere(1);
-        sketch.pop();
+        fill(point.color);
+        sphere(1);
+        pop();
     }
-    sketch.draw = () => {
+    function draw(){
         update();
-        sketch.background(120);
-        sketch.push();
-        sketch.strokeWeight(0.8);
-        sketch.grid({ dotted: false });
-        sketch.pop();
-        sketch.axes();
+        background(120);
+        push();
+        strokeWeight(0.8);
+        grid({ dotted: false });
+        pop();
+        axes();
         for (const point of points) {
-            sketch.push();
-            sketch.translate(point.worldPosition);
+            push();
+            translate(point.worldPosition);
             brush(point);
-            sketch.pop();
+            pop();
 
         }
 
@@ -87,23 +88,23 @@ const Brush3d = (sketch) => {
                     record = false;
 
                 }
-                if (buttonPressed(controller.buttons[10])) {
-                    Z1 = (controller.axes[1] * 0.3);
+                if (buttonPressed(controller.buttons[15])) {
+                    distance = distance + 2;
                 }
-                if (buttonPressed(controller.buttons[4])) {
-                    distance = distance + 5;
+                if (buttonPressed(controller.buttons[14])) {
+                    distance = distance - 2;
                 }
-                if (buttonPressed(controller.buttons[5])) {
-                    distance = distance - 5;
-                }
+                if (buttonPressed(controller.buttons[1])) {
+                           changeColor() 
+}
                 if (buttonPressed(controller.buttons[9])) {
                     points = [];
                 }
                 if (buttonPressed(controller.buttons[0])) {
-                    if (sketch.millis() - timeAux > 500) {
+                    if (millis() - timeAux > 500) {
                         escorzo = !escorzo;
-                        escorzo ? sketch.perspective() : sketch.ortho();
-                        timeAux = sketch.millis()
+                        escorzo ? perspective() : ortho();
+                        timeAux = millis()
                     }
                 }
             }
@@ -111,29 +112,39 @@ const Brush3d = (sketch) => {
                 let axes = controller.axes;
                 X0 = X0 + (axes[0] * 5);
                 Y0 = Y0 + (axes[1] * 5);
-                if (!buttonPressed(controller.buttons[7])) {
+                if (buttonPressed(controller.buttons[7])) {
                     X1 = (axes[2] * 0.3);
                     Y1 = (axes[3] * 0.3);
-                }
+                    if (buttonPressed(controller.buttons[10])) {
+                        Z1 = (controller.axes[1] * 0.3);
 
+                    }
+                }else{
+                    X1 = (axes[2] * 0.001);
+                    Y1 = (axes[3] * 0.001);   
+                    if (buttonPressed(controller.buttons[10])) {
+                        Z1 = (controller.axes[1] * 0.001);
+
+                    }
+               
+                }
                 if (record) {
                     points.push({
-                        worldPosition: sketch.treeLocation([X0, Y0], { from: 'SCREEN', to: 'WORLD' }),
-                        color: 'green',
+                        worldPosition: treeLocation([Z1+X0,Z1+Y0,0], { from: 'SCREEN', to: 'WORLD' }),
+                        color: colorA,
                     });
                 }
                 state = {
                     distance: distance, // scalar
-                    center: [0, 0, 0], // vector
+                    center: [0, 0, 10], // vector
                     rotation: [0, Z1, X1, Y1], // quaternion
                 }
                 easycam.setState(state)
-
+                
             }
         }
 
     }
-
     function buttonPressed(b) {
         if (typeof(b) == "object") {
             if (b.touched == true) {
@@ -146,13 +157,22 @@ const Brush3d = (sketch) => {
     function gamepadHandler(event, connecting) {
         let gamepad = event.gamepad;
         if (connecting) {
-            sketch.print("Connecting to controller " + gamepad.index)
+            print("Connecting to controller " + gamepad.index)
             controllers[gamepad.index] = gamepad
         } else {
             delete controllers[gamepad.index]
         }
     }
-
+      
+      function changeColor(){
+    if(millis()-timeAux > 300){
+      auxChangeColor += 1;
+      colorA = colors[auxChangeColor]
+      if (auxChangeColor == 7){
+        auxChangeColor = 0
+      colorA = colors[auxChangeColor]
+      }
+      timeAux = millis()    
+    }
+  
 }
-
-let p5Brush3d = new p5(Brush3d, document.getElementById('Brush3d'));
