@@ -3,7 +3,6 @@ import { Link } from 'gatsby';
 import * as React from 'react';
 import { GlowingRing } from '../components/elements/landing/GlowingRing';
 import { GlowingText } from '../components/elements/landing/GlowingText';
-import { GradientText } from '../components/elements/landing/GradientText';
 import AuthorsSection from '../components/Index/AuthorsSection';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
@@ -36,23 +35,6 @@ export default function IndexPage(): JSX.Element {
             </div>
 
             <div className="h-6 sm:h-8"></div>
-
-            <p
-              className="
-                md:text-center
-                text-xl
-                sm:text-2xl
-                2xl:text-3xl
-                font-medium
-                leading-snug
-                md:!leading-normal
-                text-gray-300
-              "
-            >
-              Alguna Descripción <GradientText>Impactante</GradientText>{' '}
-              <br className="hidden md:block" />
-              sobre la pagina
-            </p>
 
             <div className="h-8 sm:h-12"></div>
 
