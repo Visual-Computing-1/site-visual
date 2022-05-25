@@ -31,6 +31,8 @@
         easycam = createEasyCam();
         easycam.state_reset = state; // state to use on reset (double-click/tap)
         easycam.setState(state, 2000); // now animate to that state
+        easycam.removeMouseListeners()
+
         escorzo = true;
         //perspective();
         window.addEventListener("gamepadconnected", function(e) {
