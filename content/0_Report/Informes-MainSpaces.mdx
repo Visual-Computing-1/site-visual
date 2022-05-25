@@ -6,7 +6,48 @@ description:
   'Description Main Spaces'
 ---
 
-## Main Spaces Using Brush 3D
+# Pincel en 3D
+
+
+## Espacios Vectoriales
+Un espacio vectorial es una estructura matemática definida por un número determinado de vectores linealmente independientes, también llamados vectores base; el número de vectores linealmente independientes define el tamaño del espacio vectorial, por lo que un espacio 3D tiene tres vectores base, mientras que un espacio 2D tendría dos. 
+<center>
+![Vectores base en 3 dimensiones](http://www.codinglabs.net/public/contents/article_world_view_projection_matrix/images/coords_rh.png)
+</center>
+
+## Transformaciones Espaciales
+Podemos ver las transformaciones en un espacio vectorial simplemente como un cambio de un espacio a otro.
+Si queremos representar una transformación de un espacio 3D a otro necesitaremos una Matriz 4x4. 
+<center>
+![Tipos de Transformaciones ](http://www.codinglabs.net/public/contents/article_world_view_projection_matrix/images/transformation.png)
+</center>
+
+## Implementación
+Para la Implementación del pincel en un espacio de 3 dimensiones inicialmente se usaron dos librerías.
+* **Treegl:**  Librería de alto nivel enfocada en transformaciones espaciales.
+* **EasyCam:** Librería enfocada en el control de la cámara en espacios de 3 dimensiones.
+Extraido de: [Treegl - Github](https://github.com/VisualComputing/p5.treegl)
+
+Extraido de: [EasyCam - Github](https://diwi.github.io/p5.EasyCam/)
+
+Como dispositivo de hardware externo, se usó un control de Xbox 360; para su conexión con el entorno de p5js, se usó la función "addEventListener()" que reconoce los posibles eventos que puedan intervenir en la ejecución del código. Al conectar el control al computador se registra el evento "gamepadconnected".
+Posteriormente, se configura los botones y ejes para establecer las funcionalidades que pueda tener el código.
+
+## Conociendo el Hardware
+
+* **A.**  Cambio de vista en la cámara.
+* **B.**  Cambio de color en la brocha.
+* **1.**  Moviemiento de la brocha en el espacio.
+* **2.** Traza de puntos generada por la brocha.
+* **7.**  Limpieza del espacio.
+* **8.**  Zoom-in / Zoom-out de la cámara en el espacio.
+* **8 + 12.**  Movimiento de la cámara en el espacio.
+<center>
+![Control de Xbox](https://compass-ssl.xboxlive.com/assets/f9/34/f9348513-fd78-47bb-8e21-135a893d7524.jpg?n=Elite-Series-2-controller-face.jpg)
+
+</center>
+## Resultados usando P5js
+<center>
 
 <iframe srcDoc="
         <html>
@@ -15,10 +56,25 @@ description:
             <script src=https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/addons/p5.sound.min.js></script>
              <script src=https://cdn.jsdelivr.net/gh/VisualComputing/p5.treegl/p5.treegl.js></script> 
              <script src=https://cdn.jsdelivr.net/gh/freshfork/p5.EasyCam@1.2.1/p5.easycam.js></script>        
-            <script src='http://localhost:8000/js/brush3d/sketch.js'></script>
+            <script src='https://visual-computing-1.github.io/visual-site/js/brush3d/sketch.js'></script>
           </head>
           <body>
           </body>
         </html>
       "
       width="625px" height="475px"></iframe>
+</center>
+
+
+## Conclusiones y Trabajo Futuro
+* Se podría implementar una función similar a [orbitcontrol()](https://p5js.org/es/examples/3d-orbit-control.html) que sea funcional para cualquier dispositivo externo ya que esta tiene una limitación y solo funciona con mouse o touchpad.
+* Se podrían añadir más funcionalidades para la brocha en su recorrido ya que el hardware posee una cantidad suficiente de botones para ello 
+<Resources title="References">
+  <Resource source="Coding Labs" url="http://www.codinglabs.net/article_world_view_projection_matrix.aspx" title="World, View and Projection Transformation Matrices">
+    Coding Labs
+  </Resource>
+  <Resource source="Bio Model" url="https://biomodel.uah.es/en/DIY/JSME/draw.es.htm" title="Moleculas en 3 dimensiones">
+  Bio Model
+  </Resource>
+  
+</Resources>
