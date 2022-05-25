@@ -6,18 +6,123 @@ description:
   'Description Rasterization'
 ---
 
+# Texture Mapping
+
+Texture Mapping o en español (Mapeado de Texturas) es un método de computación gráfica utilizado en archivos de imagen bidimensional que se puede aplicar a la superficie de un modelo 3D para agregar color, textura u otros detalles de superficie como brillo, reflectividad o transparencia. Los mapas de textura se desarrollan para corresponder directamente a las coordenadas UV de un modelo 3D sin envolver.
+
+## Tipos de Mapeos
+
+* **Mapeo Difuso:** Este es el tipo más común para realizar mapeos en computación gráfica, lo qué hace este mapeo es envolver la superficie 3D mediante la imagen de textura qué es representada mediante un mapa de bits, conservando los colores originales, también hay qué decir qué cualquier tipo de imagen ya sea una imagen escaneada, capturada con una cámara digital o diseñada se puede utilizar como un mapa difuso.
+
+* **Mapeo de Opacidad:** Este mapeo realiza un efecto de transparencia y recorte a partir de imágenes en escala de grises. La parte negra se cortará; la parte blanca se mostrará completamente; los valores de gris determinan el nivel de transparencia (alfa) del objeto.
+
+* **Mapa de relieve:** El mapeo de relieve utiliza los valores de escala de grises de un mapa de imagen para crear variaciones en el sombreado de la superficie a la que se aplica el mapa. Agrega detalles a los modelos 3D sin aumentar la cantidad de polígonos. 
+
+* **Mapa Normal:** Un mapa normal (Sombreador de píxeles solamente) se crea a partir de un modelo de polígono alto. Su representación de color afectará a las superficies como un mapa de relieve normal, al mismo tiempo que proporciona un mayor grado de detalle.
+
+* **Mapa especular:** Este método de mapeo de texturas permite que partes de un objeto tenga un efecto especular.
+
+* **Mapa de resplandor:** Esta técnica de mapeo de texturas permite a los usuarios controlar la forma, el color y la fuerza del brillo.
+
+* **Mapa de reflexión:** El mapa de reflexión también se conoce como mapa de entorno. El mapa de imágenes se proyecta sobre una superficie 3D para representar un reflejo del entorno.
+
+## Triangulated surfaces (Superficies trianguladas)
+
+![Triangulated surfaces - Superficies trianguladas](https://www.researchgate.net/publication/337282774/figure/fig1/AS:825480303349761@1573821249517/Triangulation-of-surfaces-Any-curved-surface-in-this-case-a-sphere-can-be-approximated.png)
+
+_Imagen 1: Triangulación de superficies Cualquier superficie curva en este caso se puede aproximar a una esfera [*](https://www.researchgate.net/figure/Triangulation-of-surfaces-Any-curved-surface-in-this-case-a-sphere-can-be-approximated_fig6_337282774)_
+
+Triangulación de superficies. Cualquier superficie curva, en este caso una esfera, puede aproximarse mediante una malla de triángulos en un proceso llamado triangulación. Una malla más grande de caras triangulares da una mejor aproximación a la superficie original. Se muestran triangulaciones poliédricas de una esfera con n caras triangulares
+
+![Mesh Colors](https://www.researchgate.net/profile/Donald-House/publication/220184692/figure/fig2/AS:393989774692360@1470945890661/Faces-of-a-mesh-with-different-resolutions.png)
+
+_Imagen 2: Colores de Malla [*](https://www.researchgate.net/figure/Faces-of-a-mesh-with-different-resolutions_fig2_220184692)_
+
+## Coordenadas Baricéntricas / Interpolación Baricéntrica
+
+_Explicar que son las Coordenadas Baricéntrica_
+
+Primero, encontramos las coordenadas baricéntricas de $P$. Las coordenadas baricéntricas representan cuánto peso contribuye cada vértice al punto y se pueden usar para interpolar cualquier valor conocido en los vértices a lo largo de la cara de un triángulo.
+
+Consideremos los 3 triangulos Interiores $ABP$, $PBC$ y $PCA$
+
+![Coordenadas Baricéntricas / Interpolación Baricéntrica](https://i.stack.imgur.com/Ob83U.jpg)
+_Imagen 3: Interpolación Baricéntrica [*](https://computergraphics.stackexchange.com/a/1867)_
+
+Podemos decir que la coordenada baricéntrica, o peso del vértice $A$ en el punto $P$ es proporcional a la razón del área del triángulo interior $PBC$ al area de todo el triangulo $ABC$.
+
+Esto es intuitivamente evidente si consideramos que como $P$ enfoca el triangulo $PBC$ crece y los otros dos se hacen más pequeños.
+
+También debería ser intuitivamente evidente que la suma de las coordenadas baricéntricas de un punto dentro de un triángulo siempre es igual a $1$. Entonces, es suficiente encontrar solo dos de las coordenadas para derivar la tercera.
+
+El método para calcular las coordenadas baricéntricas es:
+
+## $$Bary_A=\frac{\left(B_y-C_y\right)\left(P_x-C_x\right)+\left(C_x-B_x\right)\left(P_x-C_y\right)}{\left(B_y-C_y\right)\left(A_x-C_x\right)+\left(C_x-B_x\right)\left(A_x-C_y\right)}$$
+
+## $$Bary_B=\frac{\left(C_y-A_y\right)\left(P_x-C_x\right)+\left(A_x-C_x\right)\left(P_x-C_y\right)}{\left(B_y-C_y\right)\left(A_x-C_x\right)+\left(C_x-B_x\right)\left(A_x-C_y\right)}$$
+
+## $$Bary_C=1-Bary_A-Bary_B$$
+
+La derivación y el razonamiento se explican en el artículo de [wikipedia](https://en.wikipedia.org/wiki/Barycentric_coordinate_system).
+
+Una vez que tenga las coordenadas, puede determinar las coordenadas de textura de $P$ interpolando los valores en los vértices usando las coordenadas baricéntricas como pesos:
+
+## $$P_{uv}=Bary_A\cdot A_{uv}+Bary_B\cdot B_{uv}+Bary_C\cdot C_{uv}$$
+
+Extraido desde: [Stack Exchange - How to map square texture to triangle?](https://computergraphics.stackexchange.com/a/1867)
+
 ### High Level
+
+<Spoiler title="Solución Alto Nivel">
+```java
+class HelloWorld {
+    public static void main(String[] args) {}
+}
+```
+</Spoiler>
 
 <div id="RasterizationHighLevel"></div>
 <ScriptTag type="text/javascript" src="https://visual-computing-1.github.io/visual-site/js/rasterization/high-level/sketch.js" />
 
 ### Mid level
 
+<Spoiler title="Solución Nivel Medio">
+```java
+class HelloWorld {
+    public static void main(String[] args) {}
+}
+```
+</Spoiler>
+
 <div id="RasterizationMidLevel"></div>
 <ScriptTag type="text/javascript" src="https://visual-computing-1.github.io/visual-site/js/rasterization/mid-level/sketch.js" />
 
 ### Low level
 
+<Spoiler title="Solución Bajo Nivel">
+```java
+class HelloWorld {
+    public static void main(String[] args) {}
+}
+```
+</Spoiler>
+
 <div id="RasterizationLowLevel"></div>
 <ScriptTag type="text/javascript" src="https://visual-computing-1.github.io/visual-site/js/rasterization/low-level/sketch.js" />
 
+## Referencias Bibliograficas
+
+<Resources title="References">
+  <Resource source="Reallusion" url="https://www.reallusion.com/iclone/help/iclone3/15_multiple_channel_texture_mapping/types_of_maps.htm" title="Types of Maps">
+    Lukeyu RL
+  </Resource>
+  <Resource source="Life Wire" url="https://www.lifewire.com/texture-mapping-1956" title="Surfacing 101: The Basics of Texture Mapping">
+    Justin Slick
+  </Resource>
+  <Resource source="Research Gate" url="https://www.researchgate.net/publication/337282774_A_general_method_for_the_creation_of_dilational_surfaces" title="A general method for the creation of dilational surfaces">
+    Werner van de Sande, Volkert van der Wijk, Just L Herder
+  </Resource>
+  <Resource source="Stack Exchange" url="https://computergraphics.stackexchange.com/a/1867" title="How to map square texture to triangle?">
+    Rotem
+  </Resource>
+</Resources>
