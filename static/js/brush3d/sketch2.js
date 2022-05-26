@@ -31,7 +31,7 @@ let flagCylinder = false;
 
 function setup() {
     //colour=color('green')
-    createCanvas(500, 500, WEBGL)
+    createCanvas(600, 450, WEBGL)
     let state = {
         distance: 250, // scalar
         center: [0, 0, 0], // vector
