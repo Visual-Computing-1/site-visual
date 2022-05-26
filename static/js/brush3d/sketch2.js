@@ -12,6 +12,7 @@ let Zrotation = 0
 let controllers = []
 let sphereArray = []
 let elementArray = []
+let elementCylinderArray = []
 let element2d = []
 let cylinderArray = []
 let escorzo;
@@ -30,7 +31,7 @@ let flagCylinder = false;
 
 function setup() {
     //colour=color('green')
-    createCanvas(600, 450, WEBGL)
+    createCanvas(500, 500, WEBGL)
     let state = {
         distance: 250, // scalar
         center: [0, 0, 0], // vector
@@ -62,6 +63,7 @@ function draw() {
     grid({ dotted: false });
     pop();
     axes();
+
     angleMode(DEGREES); // Change the mode to DEGREES
     drawGamepad()
 
@@ -92,6 +94,7 @@ function drawGamepad() {
                 element2d = []
                 sphereArray = []
                 cylinderArray = []
+                elementCylinderArray = []
             }
             if (buttonPressed(controller.buttons[8])) {
                 generateMolecule3d()
@@ -124,8 +127,8 @@ function drawGamepad() {
         if (controller.axes) {
             let axes = controller.axes;
             if (!buttonPressed(controller.buttons[6])) {
-                X0 = X0 + (axes[0] * 5);
-                Y0 = Y0 + (axes[1] * 5);
+                X0 = X0 + (axes[0] * 2);
+                Y0 = Y0 + (axes[1] * 2);
             } else {
                 Xrotation = Xrotation - axes[0]
                 Yrotation = Yrotation - axes[1]
@@ -189,6 +192,20 @@ function drawGamepad() {
                 fill("white")
                 translate(Xrotation + elementArray[i][0], Yrotation + elementArray[i][1], elementArray[i][2] + Sube);
                 sphere(5)
+                pop()
+            }
+            for (let i = 0; i < elementCylinderArray.length; i++) {
+                push()
+                noStroke()
+                fill('white')
+                if (elementCylinderArray[i][3] == 'X') {
+                    translate(Xrotation + elementCylinderArray[i][0], Yrotation + elementCylinderArray[i][1], elementCylinderArray[i][2] + Sube);
+                    rotateX(90)
+                } else {
+                    translate(Xrotation + elementCylinderArray[i][0], Yrotation + elementCylinderArray[i][1], Sube);
+                    rotateZ(90 + elementCylinderArray[i][4])
+                }
+                cylinder(3, elementCylinderArray[i][5]);
                 pop()
             }
             for (let i = 0; i < cylinderArray.length; i++) {
@@ -264,6 +281,38 @@ function generateMolecule3d() {
     }
 }
 
+function addCylinderElements(arrayEle, arraySphere) {
+    for (let i = 0; i < arraySphere.length; i++) {
+        for (let j = 0; j < arrayEle.length; j++) {
+            if (arrayEle[j][3] == i) {
+                if (arraySphere[i][0] == arrayEle[j][0] && arraySphere[i][1] == arrayEle[j][1]) {
+                    let aux = []
+                    append(aux, (arrayEle[j][0] + arraySphere[i][0]) / 2)
+                    append(aux, (arrayEle[j][1] + arraySphere[i][1]) / 2)
+                    append(aux, (arrayEle[j][2] + 0) / 2)
+                    append(aux, 'X')
+                    append(aux, 45)
+                    append(aux, arrayEle[j][2])
+                    append(elementCylinderArray, aux)
+                } else {
+                    let distance = sqrt(pow(arrayEle[j][0] - arraySphere[i][0], 2) + pow(arrayEle[j][1] - arraySphere[i][1], 2))
+                    let angle = atan((arrayEle[j][1] - arraySphere[i][1]) / (arrayEle[j][0] - arraySphere[i][0]))
+                    let aux = []
+                    append(aux, (arrayEle[j][0] + arraySphere[i][0]) / 2)
+                    append(aux, (arrayEle[j][1] + arraySphere[i][1]) / 2)
+                    append(aux, 0)
+                    append(aux, 'Z')
+                    append(aux, angle)
+                    append(aux, 30)
+                    append(elementCylinderArray, aux)
+
+                }
+
+            }
+        }
+    }
+}
+
 function addElements(array) {
     for (let i = 0; i < array.length; i++) {
         if (array[i][2] == 'blue') {
@@ -273,16 +322,19 @@ function addElements(array) {
                 append(ad, array[i][0])
                 append(ad, array[i][1])
                 append(ad, 20)
+                append(ad, i)
                 append(elementArray, ad)
                 append(ad2, array[i][0])
                 append(ad2, array[i][1])
                 append(ad2, -20)
+                append(ad2, i)
                 append(elementArray, ad2)
             } else {
                 let ad = []
                 append(ad, array[i][0])
                 append(ad, array[i][1])
                 append(ad, 20)
+                append(ad, i)
                 append(elementArray, ad)
             }
         } else if (array[i][2] == 'gray') {
@@ -293,10 +345,12 @@ function addElements(array) {
                 append(ad, array[i][0])
                 append(ad, array[i][1])
                 append(ad, 20)
+                append(ad, i)
                 append(elementArray, ad)
                 append(ad2, array[i][0])
                 append(ad2, array[i][1])
                 append(ad2, -20)
+                append(ad2, i)
                 append(elementArray, ad2)
                 if (i == 0) {
                     let XX = array[i][0] - array[i + 1][0]
@@ -309,6 +363,7 @@ function addElements(array) {
                             append(ad3, array[i][1] + 15)
                         }
                         append(ad3, 0)
+                        append(ad3, i)
                     } else {
                         append(ad3, array[i][0] + 15)
                         if (YY < 0) {
@@ -317,6 +372,7 @@ function addElements(array) {
                             append(ad3, array[i][1] - 15)
                         }
                         append(ad3, 0)
+                        append(ad3, i)
                     }
                 } else {
                     let XX = array[i][0] - array[i - 1][0]
@@ -329,6 +385,7 @@ function addElements(array) {
                             append(ad3, array[i][1] + 15)
                         }
                         append(ad3, 0)
+                        append(ad3, i)
                     } else {
                         append(ad3, array[i][0] + 15)
                         if (YY < 0) {
@@ -337,6 +394,8 @@ function addElements(array) {
                             append(ad3, array[i][1] - 15)
                         }
                         append(ad3, 0)
+                        append(ad3, i)
+
                     }
                 }
                 append(elementArray, ad3)
@@ -345,15 +404,29 @@ function addElements(array) {
                 append(ad, array[i][0])
                 append(ad, array[i][1])
                 append(ad, 20)
+                append(ad, i)
+
                 append(elementArray, ad)
                 let ad2 = []
                 append(ad2, array[i][0])
                 append(ad2, array[i][1])
                 append(ad2, -20)
+                append(ad2, i)
                 append(elementArray, ad2)
+            }
+        } else if (array[i][2] == 'red') {
+            if (i == 0 || i == (array.length - 1)) {
+                let ad = []
+                append(ad, array[i][0])
+                append(ad, array[i][1])
+                append(ad, 20)
+                append(ad, i)
+                append(elementArray, ad)
             }
         }
     }
+    addCylinderElements(elementArray, array)
+
 }
 
 function changeColor() {
