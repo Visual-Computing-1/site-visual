@@ -90,6 +90,23 @@
                     record = false;
 
                 }
+                if (buttonPressed(controller.buttons[11])) {
+                    state = {
+                        distance: 250, // scalar
+                        center: [0, 0, 0], // vector
+                        rotation: [0, 0, 0, 1], // quaternion
+                    }
+                    easycam.state_reset = state; // state to use on reset (double-click/tap)
+                    easycam.setState(state, 1); // now animate to that state
+                } else {
+                    state = {
+                        distance: distance, // scalar
+                        center: [0, 0, 10], // vector
+                        rotation: [0, Z1, X1, Y1], // quaternion
+                    }
+                    easycam.setState(state)
+    
+                }
                 if (buttonPressed(controller.buttons[15])) {
                     distance = distance + 2;
                 }
@@ -136,13 +153,6 @@
                         color: colorA,
                     });
                 }
-                state = {
-                    distance: distance, // scalar
-                    center: [0, 0, 10], // vector
-                    rotation: [0, Z1, X1, Y1], // quaternion
-                }
-                easycam.setState(state)
-                
             }
         }
 
