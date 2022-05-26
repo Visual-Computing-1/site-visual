@@ -71,12 +71,36 @@ Una vez que tenga las coordenadas, puede determinar las coordenadas de textura d
 
 Extraido desde: [Stack Exchange - How to map square texture to triangle?](https://computergraphics.stackexchange.com/a/1867)
 
+## Coordenadas Polares / Coordenadas Esféricas
+
+Las coordenadas esféricas determinan la posición de un punto en el espacio tridimensional en función de la distancia $ρ$ desde el origen y dos ángulos $θ$ y $ϕ$. 
+
+$$x=ρ\cdot sin\left(ϕ\right)\cdot cos\left(θ\right)$$
+
+$$y=ρ\cdot sin\left(ϕ\right)\cdot sin\left(θ\right)$$
+
+$$z=ρ\cdot cos\left(ϕ\right)$$
+
+![Coordenadas Polares / Coordenadas Esféricas](https://mathinsight.org/media/image/image/spherical_coordinates_cartesian.png)
+
+_Imagen 4: Coordenadas Esfericas [*](https://mathinsight.org/spherical_coordinates)_
+
 ### High Level
 
 <Spoiler title="Solución Alto Nivel">
 ```java
-class HelloWorld {
-    public static void main(String[] args) {}
+function draw() {
+    background(128, 128, 128, 255);
+
+    rotateZ(theta * mouseX * 0.001);
+    rotateX(theta * mouseX * 0.001);
+    rotateY(theta * mouseX * 0.001);
+
+    normalMaterial();
+    texture(img[idx]);
+    sphere(radius);
+
+    theta += 0.05;
 }
 ```
 </Spoiler>
@@ -87,11 +111,86 @@ class HelloWorld {
 ### Mid level
 
 <Spoiler title="Solución Nivel Medio">
+
 ```java
-class HelloWorld {
-    public static void main(String[] args) {}
+function setup() {
+    createCanvas(windowWidth / 2, windowHeight / 2, WEBGL);
+
+    stroke(200);
+
+    for (let i = 0; i < total + 1; i++) {
+        globe[i] = [];
+        coor[i] = [];
+        const lat = map(i, 0, total, 0, PI);
+        for (let j = 0; j < total + 1; j++) {
+            const lon = map(j, 0, total, 0, TWO_PI);
+
+            const x = radius * sin(lat) * cos(lon);
+            const y = radius * sin(lat) * sin(lon);
+            const z = radius * cos(lat);
+
+            globe[i][j] = createVector(x, y, z);
+            coor[i][j] = {
+                lat,
+                lon
+            };
+        }
+    }
+}
+
+function draw() {
+    background(128, 128, 128, 255);
+
+    rotateZ(theta * mouseX * 0.001);
+    rotateX(theta * mouseX * 0.001);
+    rotateY(theta * mouseX * 0.001);
+
+    texture(img[idx]);
+    textureMode(NORMAL);
+
+    var mnU = inf,
+        mxU = -inf;
+    var mnV = inf,
+        mxV = -inf;
+
+    for (let i = 0; i < total; i++) {
+        for (let j = 0; j < total + 1; j++) {
+            let u = (coor[i][j].lon + PI) / 2 * PI;
+            let v = coor[i][j].lat / PI;
+            mnU = min(mnU, u);
+            mxU = max(mxU, u);
+            mnV = min(mnV, v);
+            mxV = max(mxV, v);
+        }
+    }
+
+    for (let i = 0; i < total; i++) {
+        beginShape(TRIANGLE_STRIP);
+        for (let j = 0; j < total + 1; j++) {
+            const v1 = globe[i][j];
+            let u = (coor[i][j].lon + PI) / 2 * PI;
+            let v = coor[i][j].lat / PI;
+
+            u = map(u, mnU, mxU, 0, 1);
+            v = map(v, mnV, mxV, 0, 1);
+
+            vertex(v1.x, v1.y, v1.z, u, v);
+
+            const v2 = globe[i + 1][j];
+            u = (coor[i + 1][j].lon + PI) / 2 * PI;
+            v = coor[i + 1][j].lat / PI;
+            u = map(u, mnU, mxU, 0, 1);
+            v = map(v, mnV, mxV, 0, 1);
+
+            vertex(v2.x, v2.y, v2.z, u, v);
+        }
+        endShape();
+    }
+
+    theta += 0.05;
 }
 ```
+
 </Spoiler>
 
 <div id="RasterizationMidLevel"></div>
@@ -101,8 +200,142 @@ class HelloWorld {
 
 <Spoiler title="Solución Bajo Nivel">
 ```java
-class HelloWorld {
-    public static void main(String[] args) {}
+
+function compute_area(x0, y0, x1, y1, x2, y2) {
+    return (y1 - y0) * (x2 - x0) - (y2 - y0) * (x1 - x0);
+}
+
+function edge_functions(x, y, x0, y0, x1, y1, x2, y2) {
+    let edge_01 = (x0 - x1) * y + (y1 - y0) * x + (y0 * x1 - x0 * y1);
+    let edge_12 = (x1 - x2) * y + (y2 - y1) * x + (y1 * x2 - x1 * y2);
+    let edge_20 = (x2 - x0) * y + (y0 - y2) * x + (y2 * x0 - x2 * y0);
+    return {
+        edge_01,
+        edge_12,
+        edge_20
+    };
+}
+
+function barycentric_coords(x, y, x0, y0, x1, y1, x2, y2) {
+    let edges = edge_functions(x, y, x0, y0, x1, y1, x2, y2);
+    let area = compute_area(x0, y0, x1, y1, x2, y2);
+    var w0 = edges.edge_12 / area;
+    var w1 = edges.edge_20 / area;
+    var w2 = edges.edge_01 / area;
+    return {
+        w0,
+        w1,
+        w2
+    };
+}
+
+function is_inside_triangle(x, y, x0, y0, x1, y1, x2, y2) {
+    var coords = barycentric_coords(x, y, x0, y0, x1, y1, x2, y2);
+    return coords.w0 >= 0 && coords.w1 >= 0 && coords.w2 >= 0;
+}
+
+function setup() {
+    createCanvas(windowWidth / 2, windowHeight / 2, WEBGL);
+    pg = createGraphics(width / 3, height / 3);
+
+    stroke(200);
+
+    for (let i = 0; i < total + 1; i++) {
+        globe[i] = [];
+        coor[i] = [];
+        const lat = map(i, 0, total, 0, PI);
+        for (let j = 0; j < total + 1; j++) {
+            const lon = map(j, 0, total, 0, TWO_PI);
+
+            const x = radius * sin(lat) * cos(lon);
+            const y = radius * sin(lat) * sin(lon);
+            const z = radius * cos(lat);
+
+            globe[i][j] = createVector(x, y, z);
+            coor[i][j] = {
+                lat,
+                lon
+            };
+        }
+    }
+}
+
+function draw() {
+    background(128, 128, 128, 255);
+
+    pg.background(img[idx]);
+    image(pg, 0, 0);
+    push();
+
+    var x1 = map(coorx1, 0, 1, 0, width / 3),
+        y1 = map(coory1, 0, 1, 0, height / 3);
+    var x2 = map(coorx2, 0, 1, 0, width / 3),
+        y2 = map(coory2, 0, 1, 0, height / 3);
+    var x3 = map(coorx3, 0, 1, 0, width / 3),
+        y3 = map(coory3, 0, 1, 0, height / 3);
+
+    noFill();
+    stroke(0, 0, 255);
+
+    triangle(x1, y1, x2, y2, x3, y3);
+    noStroke();
+
+    translate(-150, -50);
+
+    rotateZ(angle);
+    rotateX(angle);
+    rotateY(angle * 0.75);
+
+    texture(img[idx]);
+    textureMode(NORMAL);
+
+    var mnU = inf,
+        mxU = -inf;
+    var mnV = inf,
+        mxV = -inf;
+
+    for (let i = 0; i < total; i++) {
+        for (let j = 0; j < total + 1; j++) {
+            let u = (coor[i][j].lon + PI) / 2 * PI;
+            let v = coor[i][j].lat / PI;
+            mnU = min(mnU, u);
+            mxU = max(mxU, u);
+            mnV = min(mnV, v);
+            mxV = max(mxV, v);
+        }
+    }
+
+    for (let i = 0; i < total; i++) {
+        beginShape(TRIANGLE_STRIP);
+        for (let j = 0; j < total + 1; j++) {
+            const v1 = globe[i][j];
+            let u = (coor[i][j].lon + PI) / 2 * PI;
+            let v = coor[i][j].lat / PI;
+
+            u = map(u, mnU, mxU, 0, 1);
+            v = map(v, mnV, mxV, 0, 1);
+
+            if (is_inside_triangle(u, v, coorx1, coory1, coorx2, coory2, coorx3, coory3)) {
+                vertex(v1.x, v1.y, v1.z, u, v);
+            } else {
+                vertex(v1.x, v1.y, v1.z);
+            }
+
+            const v2 = globe[i + 1][j];
+            u = (coor[i + 1][j].lon + PI) / 2 * PI;
+            v = coor[i + 1][j].lat / PI;
+            u = map(u, mnU, mxU, 0, 1);
+            v = map(v, mnV, mxV, 0, 1);
+
+            if (is_inside_triangle(u, v, coorx1, coory1, coorx2, coory2, coorx3, coory3)) {
+                vertex(v2.x, v2.y, v2.z, u, v);
+            } else {
+                vertex(v2.x, v2.y, v2.z);
+            }
+        }
+        endShape();
+    }
+    angle += 0.025;
 }
 ```
 </Spoiler>
@@ -124,5 +357,8 @@ class HelloWorld {
   </Resource>
   <Resource source="Stack Exchange" url="https://computergraphics.stackexchange.com/a/1867" title="How to map square texture to triangle?">
     Rotem
+  </Resource>
+  <Resource source="Math Insight" url="https://mathinsight.org/spherical_coordinates" title="Spherical coordinates">
+    Duane Q. Nykamp
   </Resource>
 </Resources>
