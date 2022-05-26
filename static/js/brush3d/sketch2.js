@@ -25,11 +25,12 @@ let timeAux = 0;
 let timeAuxCylinder = 0;
 let timeAuxElement = 0;
 let flagSphere = true;
+let flagCylinder = false;
 
 
 function setup() {
     //colour=color('green')
-    createCanvas(500, 500, WEBGL)
+    createCanvas(600, 450, WEBGL)
     let state = {
         distance: 250, // scalar
         center: [0, 0, 0], // vector
@@ -61,7 +62,6 @@ function draw() {
     grid({ dotted: false });
     pop();
     axes();
-
     angleMode(DEGREES); // Change the mode to DEGREES
     drawGamepad()
 
@@ -90,6 +90,7 @@ function drawGamepad() {
             if (buttonPressed(controller.buttons[9])) {
                 elementArray = []
                 element2d = []
+                sphereArray = []
                 cylinderArray = []
             }
             if (buttonPressed(controller.buttons[8])) {
