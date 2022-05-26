@@ -105,6 +105,8 @@ function drawGamepad() {
                 }
                 easycam.state_reset = state; // state to use on reset (double-click/tap)
                 easycam.setState(state, 1); // now animate to that state
+                X0 = 0
+                Y0 = 0
             } else {
                 state = {
                     distance: distance, // scalar
