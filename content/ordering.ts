@@ -35,7 +35,13 @@ const MODULE_ORDERING: { [key in SectionID]: Chapter[] } = {
     },
     {
       name: 'Informes',
-      items: ['informes-i', 'informes-rasterization', 'informes-main-spaces'],
+      items: [
+        'informes-i',
+        'informes-rasterization',
+        'informes-main-spaces',
+        'informes-processing-image',
+        'informes-procedural-texturing',
+      ],
     },
   ],
   general: [
