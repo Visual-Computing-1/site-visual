@@ -4,7 +4,7 @@ let grey_scale;
 
 function preload() {
     lumaShader = readShader('http://localhost:8000/js/processingImage/luma.frag', { varyings: Tree.texcoords2 });
-    img = loadImage('http://localhost:8000/js/processingImage/img/bandera2.jpg');
+    img = loadImage('http://localhost:8000/js/processingImage/bandera2.jpg');
     maskShader = readShader('http://localhost:8000/js/processingImage/mask.frag', { varyings: Tree.texcoords2 });
 
 }
