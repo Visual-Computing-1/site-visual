@@ -3,9 +3,9 @@ let img;
 let grey_scale;
 
 function preload() {
-    lumaShader = readShader('http://localhost:8000/js/processingImage/luma.frag', { varyings: Tree.texcoords2 });
-    img = loadImage('http://localhost:8000/js/processingImage/bandera2.jpg');
-    maskShader = readShader('http://localhost:8000/js/processingImage/mask.frag', { varyings: Tree.texcoords2 });
+    lumaShader = readShader('https://visual-computing-1.github.io/visual-site/js/processingImage/luma.frag', { varyings: Tree.texcoords2 });
+    img = loadImage('https://visual-computing-1.github.io/visual-site/js/processingImage/bandera2.jpg');
+    maskShader = readShader('https://visual-computing-1.github.io/visual-site/js/processingImage/mask.frag', { varyings: Tree.texcoords2 });
 
 }
 
@@ -44,12 +44,12 @@ function setup() {
     mask_trit = createCheckbox('Tritanomalía', false);
     mask_trit.position(260, 30);
     mask_trit.style('color', 'white');
-    mask_trit = createCheckbox('Tritanomalía', false);
-    mask_trit.position(260, 30);
-    mask_trit.style('color', 'white');
-    mask_trit = createCheckbox('Tritanomalía', false);
-    mask_trit.position(260, 30);
-    mask_trit.style('color', 'white');
+    mask_aniot = createCheckbox('Acromatopsia', false);
+    mask_aniot.position(10, 50);
+    mask_aniot.style('color', 'white');
+    mask_anio = createCheckbox('Acromatomía', false);
+    mask_anio.position(120, 50);
+    mask_anio.style('color', 'white');
     shader(maskShader);
 }
 
@@ -100,6 +100,20 @@ function draw() {
         mask_prot.checked(false)
         mask_deut.checked(false)
         maskShader.setUniform('mask', [0.967, 0.033, 0.0, 0.0, 0.733, 0.267, 0.0, 0.183, 0.817]);
+    } else if (mask_aniot.checked()) {
+        mask_pro.checked(false)
+        mask_deu.checked(false)
+        mask_tri.checked(false)
+        mask_prot.checked(false)
+        mask_deut.checked(false)
+        maskShader.setUniform('mask', [0.299, 0.587, 0.114, 0.299, 0.587, 0.114, 0.299, 0.587, 0.114, ]);
+    } else if (mask_anio.checked()) {
+        mask_pro.checked(false)
+        mask_deu.checked(false)
+        mask_tri.checked(false)
+        mask_prot.checked(false)
+        mask_deut.checked(false)
+        maskShader.setUniform('mask', [0.618, 0.32, 0.062, 0.163, 0.775, 0.062, 0.163, 0.32, 0.516, ]);
     } else {
         maskShader.setUniform('mask', [1, 0, 0, 0, 1, 0, 0, 0, 1]);
     }
