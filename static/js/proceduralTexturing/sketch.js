@@ -1,5 +1,9 @@
 let sh, u_time;
 let button;
+let options;
+let u_option;
+
+const mapping = { "square":   0, "circle":   1, "triangle": 2 };
 
 const SIDE = 430;
 const PADDING = SIDE / 4;
@@ -17,6 +21,16 @@ function setup() {
   button = createButton("randomly generate");
   button.mousePressed(changeBG);
   u_seed = random(1, 30);
+
+	options = createSelect();
+  options.position(10, 10);
+  options.option("square");   // square:   0
+  options.option("circle");   // circle:   1
+  options.option("triangle"); // triangle: 2
+  options.selected("square");
+	u_option = "square";
+
+  options.changed(changeOptions);
 }
 
 function draw() {
@@ -26,10 +40,15 @@ function draw() {
   sh.setUniform("u_time", u_time.value());
   sh.setUniform("u_resolution", [width, height]);
   sh.setUniform("u_seed", u_seed);
+  sh.setUniform("u_option", mapping[u_option]);
   
   rect(-width + PADDING, -height + PADDING, width + PADDING, height + PADDING);
 }
 
 function changeBG() {
   u_seed = random(1, 30);
+}
+
+function changeOptions() {
+	u_option = options.value();
 }
