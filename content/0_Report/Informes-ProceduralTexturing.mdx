@@ -7,7 +7,209 @@ description:
 ---
 # Procedural Texturing
 
-<div id="ProceduralTexturing"></div>
+Las texturas de procedimiento son texturas (a veces también llamadas mapas) que genera la computadora utilizando un conjunto fijo de parámetros. ¡Esto significa que la computadora puede hacer variaciones únicas de una textura por sí misma!
+
+El proceso utilizado para hacer esto se llama generación procedimental.
+
+La generación de procedimientos es un término general para cuando una computadora genera datos automáticamente, en lugar de que el usuario tenga que hacerlo a mano.
+
+Esto se usa a menudo en muchas otras áreas de trabajo y juegos en 3D. Minecraft, por ejemplo, tiene un mapa que se genera por procedimientos, lo que le permite ser tan grande. La mano de obra para hacer cosas de ese tamaño sería poco práctica.
+
+Las texturas de procedimiento se pueden encontrar en algunos software 3D de forma predeterminada, y también en software de texturización creado específicamente.
+
+Substance Painter es un buen ejemplo de software que tiene varios tipos de generadores de procedimientos para crear texturas únicas fácilmente.
+
+## Algoritmos de Generación de laberintos
+
+Algoritmos clásicos de generación de laberintos a nivel de software
+
+* Randomized DFS
+  * Utilizando Recursividad
+  * Utilizando un Stack
+* Randomized Kruskal's algorithm
+* Randomized Prim's algorithm
+* Wilson's algorithm
+* Aldous-Broder algorithm
+* Cellular automaton algorithms
+
+Como observamos anteriormente existen múltiples algoritmos para la generación aleatoria de laberintos a nivel de software, cada uno tiene ventajas y desventajas respecto a los demás dependiendo las necesidades y requerimientos qué se tengan. Sin embargo, nos encontramos con un gran problema cuando intentamos realizar esta generación utilizando estos algoritmos a nivel de hardware de forma paralela debido a qué la mayoría de estos algoritmos requieren información del estado de celdas previas y esto es imposible de realizar cuando se está ejecutando un procedimiento de forma paralela. Una posible solución a este problema es utilizar estructura de datos  mediante memoria compartida transversal a todos los procesos. No obstante, revisando la documentación de Fragment Shader / GLSL, no es posible realizar este procedimiento, por lo cual debemos descartar la gran mayoría de los algoritmos a nivel de software qué realizan este procedimiento.
+
+## Patrón de Truchet
+
+En el siglo XVIII el cura dominico frances Sébastien Truchet qué estaba muy interesado en los patrones qué se podían formar con las baldosas, para formar figuras geométricas novedosas con ellas. Empezó dividiendo las baldosas por la mitad en diagonal y las pintaba solo la mitad.
+
+<center>
+  <img src="http://localhost:8000/img/Baldosa-de-Truchet.png" />
+</ center>
+
+Después de ello se dió a la gran tarea de contar el número de distintas formas qué se pueden formar utilizando dos baldosas, rotandolas cada una. Sé dio cuenta qué se podian generar 54 patrones y el los agrupo en 10 grupos como se puede ver en la (imagen x)
+
+<center>
+  <img src="http://localhost:8000/img/Truchet-Table.png" width="70%" height="70%" />
+</ center>
+
+El número posible de combinaciones es muy grande y muchas de ellas tienen algún tipo de simetría qué puede ser interesante observar, como lo realizó Truchet  en la siguiente imagen:
+
+<center>
+  <img src="http://localhost:8000/img/Truchet-Figure.png" width="70%" height="70%" />
+</ center>
+
+Casi 300 Años después el ingeniero metalúrgico Cyril Stanley Smith en un proyecto como profesor de la universidad escribió un artículo científico relacionado y en continuación al trabajo de Truchet relacionándolos con los efectos de la materia y introduciendo de la misma forma unos diseños sencillos pero interesantes qué se combinan entre sí, consiguiendo un entramado de zonas abiertas y cerradas similares a un laberinto como lo puede ver a continuación:
+
+<center>
+  <img src="http://localhost:8000/img/Tile-1.png" />
+</ center>
+
+<center>
+  <img src="http://localhost:8000/img/Maze.png" />
+</ center>
+
+Únicamente cambiando el diseño de una baldosa, se pueden formar laberintos geométricamente diferentes como se puede observar en la imagen de abajo. 
+
+<center>
+  <img src="http://localhost:8000/img/Tile-Square.png" />
+</ center>
+
+<center>
+  <img src="http://localhost:8000/img/Maze-Square.png" />
+</ center>
+
+Así mismo, cambiando la baldosa utilizando una, dos y más líneas diagonales y circulares, se pueden conseguir muchas figuras geométricas con geometrías complejas pero estéticamente interesantes.
+
+<center>
+  <img src="http://localhost:8000/img/Types.png" />
+</ center>
+
+A continuación se encuentra la implementación de los Patrones de Truchet en p5.js y Fragment Shader, para la generación de laberintos aleatorios utilizando diferentes baldosas:
+
+<center>
+  <div id="ProceduralTexturing"></div>
+</ center>
+
+<Spoiler title="P5.js">
+```java
+let sh, u_time;
+let button;
+let options;
+let u_option;
+
+const mapping = { "square":   0, "circle":   1, "triangle": 2 };
+
+const SIDE = 430;
+const PADDING = SIDE / 4;
+
+let u_seed;
+
+function preload(){
+  sh = readShader("http://localhost:8000/js/proceduralTexturing/ProceduralTexturing.frag")
+}
+
+function setup() {
+  createCanvas(SIDE, SIDE, WEBGL)
+  u_time = createSlider(95, 100, 96, 1);
+  u_time.position(10, 25);
+  button = createButton("randomly generate");
+  button.mousePressed(changeBG);
+  u_seed = random(1, 30);
+  
+  options = createSelect();
+  options.position(10, 10);
+  options.option("square");   // square:   0
+  options.option("circle");   // circle:   1
+  options.option("triangle"); // triangle: 2
+  options.selected("square");
+  u_option = "square";
+  
+  options.changed(changeOptions);
+  
+  sh.setUniform("u_option", mapping[u_option]);
+}
+
+function draw() {
+  background(0);
+  shader(sh);
+  
+  sh.setUniform("u_time", u_time.value());
+  sh.setUniform("u_resolution", [width, height]);
+  sh.setUniform("u_seed", u_seed);
+  
+  rect(-width + PADDING, -height + PADDING, width + PADDING, height + PADDING);
+}
+
+function changeBG() {
+  u_seed = random(1, 30);
+  sh.setUniform("u_seed", u_seed);
+}
+
+function changeOptions() {
+  u_option = options.value();
+  sh.setUniform("u_option", mapping[u_option]);
+}
+```
+</ Spoiler>
+
+
+<Spoiler title="Fragment Shader">
+```java
+// Procedural Texturing using Truchet Pattern
+
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform float u_seed;
+uniform int u_option;
+
+float random(in vec2 coord) {
+    return fract(sin(dot(coord.xy, vec2(12.9898,78.233)))* 43758.5453123*u_seed);
+}
+
+vec2 truchetPattern(in vec2 pos, in float index){
+    index = fract(((index-0.5)*2.0));
+    if (index > 0.75) {
+        pos = vec2(1.0) - pos;
+    } else if (index > 0.5) {
+        pos = vec2(1.0-pos.x, pos.y);
+    } else if (index > 0.25) {
+        pos = 1.0-vec2(1.0-pos.x, pos.y);
+    }
+    return pos;
+}
+
+void main() {
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    st *= 10.0;
+    st = (st - vec2(5.0)) * (abs(sin(u_time * 0.2)) * 5.0);
+
+    vec2 ipos = floor(st);  // integer
+    vec2 fpos = fract(st);  // fraction
+
+    vec2 tile = truchetPattern(fpos, random(ipos));
+
+    float color = 0.0;
+
+    if(u_option == 1) { // Circles
+        color = (
+            (
+                step(length(tile), 0.6) -
+                step(length(tile), 0.4)
+            ) +
+            (
+                step(length(tile - vec2(1.0)), 0.6) -
+                step(length(tile - vec2(1.0)), 0.4)
+            )
+        );
+    } else if(u_option == 2) { // Truchet (2 triangles)
+        color = step(tile.x, tile.y);
+    } else { // Maze
+        color = smoothstep(tile.x - 0.3, tile.x, tile.y) - smoothstep(tile.x, tile.x + 0.3, tile.y);
+    }
+    gl_FragColor = vec4(vec3(color), 1.0);
+}
+```
+</ Spoiler>
 
 <center>
   <iframe srcDoc="
@@ -15,7 +217,7 @@ description:
       <head>
         <script src=https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js></script>
         <script src=https://cdn.jsdelivr.net/gh/VisualComputing/p5.treegl/p5.treegl.js></script> 
-        <script src='https://visual-computing-1.github.io/visual-site/js/proceduralTexturing/sketch.js'></script>
+        <script src='http://localhost:8000/js/proceduralTexturing/sketch.js'></script>
       </head>
       <body>
       </body>
@@ -25,10 +227,13 @@ description:
 </center>
 
 <Resources title="References">
-  <Resource source="Coding Labs" url="http://www.codinglabs.net/article_world_view_projection_matrix.aspx" title="World, View and Projection Transformation Matrices">
-    Coding Labs
+  <Resource source="Concept Art Empire" url="https://conceptartempire.com/procedural-textures-maps" title="What are Procedural Textures (Procedural Maps)?">
+    Thomas Denham
   </Resource>
-  <Resource source="Bio Model" url="https://biomodel.uah.es/en/DIY/JSME/draw.es.htm" title="Moleculas en 3 dimensiones">
-    Bio Model
+  <Resource source="Hacker Ludico Blog Spot" url="https://hackerludico.blogspot.com/2017/06/una-simple-baldosa-i.html" title="UNA SIMPLE BALDOSA (I)">
+    Chuso Jar
+  </Resource>
+  <Resource source="The Book of Shaders" url="https://thebookofshaders.com/10/" title="Generative Designs">
+    Patricio Gonzalez Vivo & Jen Lowe
   </Resource>
 </Resources>

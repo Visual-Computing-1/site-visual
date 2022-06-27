@@ -11,7 +11,7 @@ const PADDING = SIDE / 4;
 let u_seed;
 
 function preload(){
-  sh = readShader("https://visual-computing-1.github.io/visual-site/js/proceduralTexturing/ProceduralTexturing.frag")
+  sh = readShader("http://localhost:8000/js/proceduralTexturing/ProceduralTexturing.frag")
 }
 
 function setup() {
@@ -21,7 +21,7 @@ function setup() {
   button = createButton("randomly generate");
   button.mousePressed(changeBG);
   u_seed = random(1, 30);
-
+  
 	options = createSelect();
   options.position(10, 10);
   options.option("square");   // square:   0
@@ -29,8 +29,10 @@ function setup() {
   options.option("triangle"); // triangle: 2
   options.selected("square");
 	u_option = "square";
-
+  
   options.changed(changeOptions);
+  
+  sh.setUniform("u_option", mapping[u_option]);
 }
 
 function draw() {
@@ -40,15 +42,16 @@ function draw() {
   sh.setUniform("u_time", u_time.value());
   sh.setUniform("u_resolution", [width, height]);
   sh.setUniform("u_seed", u_seed);
-  sh.setUniform("u_option", mapping[u_option]);
   
   rect(-width + PADDING, -height + PADDING, width + PADDING, height + PADDING);
 }
 
 function changeBG() {
   u_seed = random(1, 30);
+  sh.setUniform("u_seed", u_seed);
 }
 
 function changeOptions() {
 	u_option = options.value();
+  sh.setUniform("u_option", mapping[u_option]);
 }
