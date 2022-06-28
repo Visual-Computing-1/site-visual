@@ -121,12 +121,12 @@ function sketch(p5) {
         CVDMatrix[typeblindness][18] * img.pixels[id + 3] +
         CVDMatrix[typeblindness][19];
 
-      /*R = r - R;
+      /*      R = r - R;
       G = g - G;
       B = b - B;
-      RR = (CVDMatrixCorrection[correctionerror][0] * R) + (CVDMatrixCorrection[correctionerror][1] * G) + (CVDMatrixCorrection[correctionerror][2] * B);
-      GG = (CVDMatrixCorrection[correctionerror][3] * R) + (CVDMatrixCorrection[correctionerror][4] * G) + (CVDMatrixCorrection[correctionerror][5] * B);
-      BB = (CVDMatrixCorrection[correctionerror][6] * R) + (CVDMatrixCorrection[correctionerror][7] * G) + (CVDMatrixCorrection[correctionerror][8] * B);
+      R = (CVDMatrixCorrection[correctionerror][0] * R) + (CVDMatrixCorrection[correctionerror][1] * G) + (CVDMatrixCorrection[correctionerror][2] * B);
+      G = (CVDMatrixCorrection[correctionerror][3] * R) + (CVDMatrixCorrection[correctionerror][4] * G) + (CVDMatrixCorrection[correctionerror][5] * B);
+        B = (CVDMatrixCorrection[correctionerror][6] * R) + (CVDMatrixCorrection[correctionerror][7] * G) + (CVDMatrixCorrection[correctionerror][8] * B);
       // Add compensation to original values
       R = RR + r;
       G = GG + g;

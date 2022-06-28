@@ -7,6 +7,64 @@ description:
 ---
 # ¿Cómo ve una persona con diferentes tipos de daltonismo?
 
+## Introducción
+
+El daltonismo es un tipo de deficiencia de la visión del color. Hay tres tipos de daltonismo: Monocromacia, Dicromacia y Tricromacia Anómala. El daltónico no tiene cura. Sin embargo, hay diferentes técnicas que han permitido mejorar la visión de las personas, desde gafas con filtros de color hasta algoritmos que permiten mejorar la imagen en teléfonos celulares.
+
+El daltonismo afecta aproximadamente a 1 de cada 12 hombres y 1 de cada 200 mujeres en el mundo. La mayoría de las personas con daltonismo tienen la capacidad de ver las cosas tan claramente como otras personas, pero no pueden ver claramente la luz roja, verde o azul.
+
+Hay diferentes causas de daltonismo. Para la mayoría de las personas con deficiencia de la visión del color, la afección es genética y por lo general es hereditaria.
+
+<table>
+    <thead>
+    <tr>
+        <th>Tipo daltónico</th>
+        <th>Causa</th>
+        <th>Efecto</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Monocromatico</td>
+            <td>No hay conos o sólo existe un tipo de cono</td>
+            <td>Incapacidad de ver cualquier color (Visión en escala de grises)</td>
+        </tr>
+        <tr>
+            <td>Dicromatico</td>
+            <td>No existen conos o solo existe un tipo de cono<br />**1)** Protanopia: ausencia de conos L<br />**2)** Duteranopia: ausencia de conos M<br />**3)** Tritanopia: ausencia de conos S</td>
+            <td>Incapacidad de ver el color correspondiente al tipo de cono perdido<br />Incapacidad de ver el color rojo (Red Blind)<br />Incapacidad para ver el color verde (Green Blind)<br />Incapacidad para ver el color azul (Blue Blind)</td>
+        </tr>
+        <tr>
+            <td>Tricromacia anómala</td>
+            <td>Existen todos los tipos de conos, pero no están alineados, tres tipos:<br /><br />**1)** Protanomalía: los conos L no están alineados<br />**2)** Dueteranomalía: los conos M no están alineados<br />**3)** Tritanomalía: los conos S no están alineados</td>
+            <td>Reducción de la sensibilidad a un color en particular<br /><br />Menor sensibilidad al color rojo (Red Blind)<br />Menor sensibilidad al color verde (Green Blind)<br />Menor sensibilidad al color azul (Blue Blind)</td>
+        </tr>
+    </tbody>
+</table>
+
+## Revisión de la Literatura / Antecedentes
+
+### Algoritmo 1: Filtros en cada pixel.
+
+Entrada: imagen de entrada RGB
+
+Salida: imagen con filtro de daltonismo
+
+<Info title="1) Convierta la imagen RGB con daltonismo usando las siguientes matrices.">
+</Info>
+<Info title="Para Protanopía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix}0.567&0.433&0.0\\ 0.558&0.442&0.0\\ 0.242&0.758&0.0\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(1\right)$$
+<Info title="Para Deuteranopía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix}0.625&0.375&0.0\\ 0.7&6.3&0.0\\ 0.3&0.7&0.0\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(2\right)$$
+<Info title="Para Tritanopía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.95&0.05&0.0\\ 0.433&0.567&0.0\\ 0.475&0.525&0.0\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(3\right)$$
+
+
+
+
 
 ## Resultados usando P5js
 <center>
@@ -18,7 +76,7 @@ description:
             <script src=https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/addons/p5.sound.min.js></script>
              <script src=https://cdn.jsdelivr.net/gh/VisualComputing/p5.treegl/p5.treegl.js></script> 
              <script src=https://cdn.jsdelivr.net/gh/freshfork/p5.EasyCam@1.2.1/p5.easycam.js></script>        
-            <script src='https://visual-computing-1.github.io/visual-site/js/processingImage/sketch.js'></script>
+            <script src='http://localhost:8000/js/processingImage/sketch.js'></script>
           </head>
           <body>
           </body>
