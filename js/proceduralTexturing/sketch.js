@@ -11,7 +11,7 @@ const PADDING = SIDE / 4;
 let u_seed;
 
 function preload(){
-  sh = readShader("http://localhost:8000/js/proceduralTexturing/ProceduralTexturing.frag")
+  sh = readShader("https://visual-computing-1.github.io/visual-site/js/proceduralTexturing/ProceduralTexturing.frag")
 }
 
 function setup() {
