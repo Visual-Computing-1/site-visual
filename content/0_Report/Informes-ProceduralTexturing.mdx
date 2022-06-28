@@ -39,45 +39,45 @@ Como observamos anteriormente existen múltiples algoritmos para la generación 
 En el siglo XVIII el cura dominico frances Sébastien Truchet qué estaba muy interesado en los patrones qué se podían formar con las baldosas, para formar figuras geométricas novedosas con ellas. Empezó dividiendo las baldosas por la mitad en diagonal y las pintaba solo la mitad.
 
 <center>
-  <img src="http://localhost:8000/img/Baldosa-de-Truchet.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Baldosa-de-Truchet.png" />
 </ center>
 
 Después de ello se dió a la gran tarea de contar el número de distintas formas qué se pueden formar utilizando dos baldosas, rotandolas cada una. Sé dio cuenta qué se podian generar 54 patrones y el los agrupo en 10 grupos como se puede ver en la (imagen x)
 
 <center>
-  <img src="http://localhost:8000/img/Truchet-Table.png" width="70%" height="70%" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Truchet-Table.png" width="70%" height="70%" />
 </ center>
 
 El número posible de combinaciones es muy grande y muchas de ellas tienen algún tipo de simetría qué puede ser interesante observar, como lo realizó Truchet  en la siguiente imagen:
 
 <center>
-  <img src="http://localhost:8000/img/Truchet-Figure.png" width="70%" height="70%" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Truchet-Figure.png" width="70%" height="70%" />
 </ center>
 
 Casi 300 Años después el ingeniero metalúrgico Cyril Stanley Smith en un proyecto como profesor de la universidad escribió un artículo científico relacionado y en continuación al trabajo de Truchet relacionándolos con los efectos de la materia y introduciendo de la misma forma unos diseños sencillos pero interesantes qué se combinan entre sí, consiguiendo un entramado de zonas abiertas y cerradas similares a un laberinto como lo puede ver a continuación:
 
 <center>
-  <img src="http://localhost:8000/img/Tile-1.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Tile-1.png" />
 </ center>
 
 <center>
-  <img src="http://localhost:8000/img/Maze.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Maze.png" />
 </ center>
 
 Únicamente cambiando el diseño de una baldosa, se pueden formar laberintos geométricamente diferentes como se puede observar en la imagen de abajo. 
 
 <center>
-  <img src="http://localhost:8000/img/Tile-Square.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Tile-Square.png" />
 </ center>
 
 <center>
-  <img src="http://localhost:8000/img/Maze-Square.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Maze-Square.png" />
 </ center>
 
 Así mismo, cambiando la baldosa utilizando una, dos y más líneas diagonales y circulares, se pueden conseguir muchas figuras geométricas con geometrías complejas pero estéticamente interesantes.
 
 <center>
-  <img src="http://localhost:8000/img/Types.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Types.png" />
 </ center>
 
 A continuación se encuentra la implementación de los Patrones de Truchet en p5.js y Fragment Shader, para la generación de laberintos aleatorios utilizando diferentes baldosas:
@@ -101,7 +101,7 @@ const PADDING = SIDE / 4;
 let u_seed;
 
 function preload(){
-  sh = readShader("http://localhost:8000/js/proceduralTexturing/ProceduralTexturing.frag")
+  sh = readShader("https://visual-computing-1.github.io/visual-site/js/proceduralTexturing/ProceduralTexturing.frag")
 }
 
 function setup() {
