@@ -3,6 +3,7 @@ let img;
 let grey_scale;
 let video_src;
 let sel;
+let sel2;
 
 function preload() {
     img = loadImage('https://visual-computing-1.github.io/visual-site/js/processingImage/bandera2.jpg');
@@ -45,12 +46,25 @@ function setup() {
     shader(maskShader);
     maskShader.setUniform('texture', img);
     emitTexOffset(maskShader, img, 'texOffset');
+    sel2 = createSelect();
+    sel2.position(140, 10);
+    sel2.option('Total');
+    sel2.option('Lente');
+    sel2.selected('Total');
 
 
 }
 
+
+
 function draw() {
     background(244, 248, 252);
+    maskShader.setUniform('mouse_position', [mouseX, mouseY]);
+    if (sel2.value() == "Lente") {
+        maskShader.setUniform('filter_selected', 1);
+    } else if (sel2.value() == "Total") {
+        maskShader.setUniform('filter_selected', 2);
+    }
     if (sel.value() == "Protanopía") {
         maskShader.setUniform('mask', [0.567, 0.433, 0.0, 0.558, 0.442, 0.0, 0.0, 0.242, 0.758]);
     } else if (sel.value() == "Deuteranopia") {
@@ -75,8 +89,6 @@ function draw() {
         maskShader.setUniform('texture', img);
         emitTexOffset(maskShader, img, 'texOffset');
     }
-
-
 
 }
 
