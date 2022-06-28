@@ -61,9 +61,67 @@ $$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix}0.625&0.375&0.0\\ 0.7
 <Info title="Para Tritanopía.">
 </Info>
 $$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.95&0.05&0.0\\ 0.433&0.567&0.0\\ 0.475&0.525&0.0\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(3\right)$$
+<Info title="Para Protanomalía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.817&0.183&0.0\\ 0.817&0.183&0.0\\ 0.125&0.875&0.0\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(4\right)$$
+<Info title="Para Deuteranomalía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.8&0.2&0.0\\ 0.258&0.742&0.0\\ 0.142&0.858&0.0\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(5\right)$$
+<Info title="Para Tritanomalía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.967&0.033&0.0\\ 0.733&0.267&0.0\\ 0.183&0.817&0.0\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(6\right)$$
+<Info title="Para Acromatopsía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.299&0.587&0.114\\  0.299&0.587&0.114\\ 0.299&0.587&0.114\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(5\right)$$
+<Info title="Para Acromatomía.">
+</Info>
+$$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix}  0.618&0.32&0.062\\ 0.163&0.775&0.062\\ 0.163&0.32&0.516\end{pmatrix}\begin{pmatrix}R\\ G\\ B\end{pmatrix}\:\:\:\:\left(6\right)$$
 
 
 
+Ahora... ¿cómo aplicamos estos filtros?
+
+Usando **shaders**
+
+
+Un shader es un programa definido por el usuario y diseñado para ejecutarse en alguna etapa de un procesador gráfico. Los sombreadores proporcionan el código para ciertas etapas programables del proceso de renderizado. También pueden utilizarse de forma algo más limitada para el cálculo general en la GPU.
+
+Básicamente hay tres tipos de shaders:
+**Vertex Shaders**: se ejecutan una vez por cada vértice que forma parte del elemento que se quiere renderizar. Permiten hacer efectos sobre los propios vértices, es decir, moverlos para hacer algún efecto de distorsión (aplicar una función trigonométrica como seno podría servir para simular las olas de un océano, por ejemplo). Su valor de retorno es la posición del vértice procesada.
+
+**Pixel Shaders (en OpenGL los llaman Fragment Shader)**: se ejecutan una vez por cada fragmento visible de la imagen (es decir, la cantidad de veces que se ejecuten depende de la vista de cámara, tamaño del objeto y otros factores más). Su valor de retorno es el color del pixel resultante. Con la ayuda de los vertex shaders, permiten hacer efectos vistosos como iluminación, cel shading, bump mapping, y una gran cantidad de filtros de post-procesamiento como desenfoque, profundidad de campo, desenfoque de movimiento, bloom, hdr, entre otros.
+
+**Geometry Shaders**: se ejecutan por cada cara del modelo que se quiere renderizar. Tienen la particularidad que pueden crear nuevos vértices por lo que son muy útiles para generar efectos como pasto, pelo, sombras proyectadas, reflejos, etc.
+
+
+
+<Spoiler title="filter_color_blindness.frag">
+```java
+precision mediump float;
+
+uniform sampler2D texture;
+uniform vec2 texOffset;
+// holds the 3x3 kernel
+uniform float mask[9];
+
+// we need our interpolated tex coord
+varying vec2 texcoords2;
+
+vec3 filter(vec3 texel,float[9] mask){
+  vec4 convolution;
+  convolution.r = mask[0] * texel.r + mask[1] * texel.g + texel.b * mask[2];
+  convolution.g = mask[3] * texel.r + mask[4] * texel.g + texel.b * mask[5];
+  convolution.b = mask[6] * texel.r + mask[7] * texel.g + texel.b * mask[8];
+  return convolution.rgb;
+}
+
+void main() {
+  vec4 texel = texture2D(texture, texcoords2);
+  // 4. Set color from convolution
+  gl_FragColor = vec4((vec3(filter(texel.rgb,mask))), 1.0); 
+}
+```
+</ Spoiler>
 
 
 ## Resultados usando P5js
@@ -76,7 +134,7 @@ $$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.95&0.05&0.0\\ 0.43
             <script src=https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/addons/p5.sound.min.js></script>
              <script src=https://cdn.jsdelivr.net/gh/VisualComputing/p5.treegl/p5.treegl.js></script> 
              <script src=https://cdn.jsdelivr.net/gh/freshfork/p5.EasyCam@1.2.1/p5.easycam.js></script>        
-            <script src='http://localhost:8000/js/processingImage/sketch.js'></script>
+            <script src='https://visual-computing-1.github.io/visual-site/js/processingImage/sketch.js'></script>
           </head>
           <body>
           </body>
@@ -85,13 +143,20 @@ $$\begin{pmatrix}Rp\\ Gp\\ Bp\end{pmatrix}_=\begin{pmatrix} 0.95&0.05&0.0\\ 0.43
       width="620px" height="660px"></iframe>
 </center>
 
+## Conclusiones y Trabajo Futuro
+
+* Los shaders son útiles para usar el hardware del dispositivo sobre el cuál se está corriendo la página web y así mejorar su rendimiento.
+* Se podría profundizar sobre los métodos para corregir el color en las imágenes y aplicarlo usando shaders.
+* La corrección de color en imágenes y videos puede ser útil para las personas daltónicas, mejorando la accesibilidad.
+
+
 
 <Resources title="References">
-  <Resource source="Coding Labs" url="http://www.codinglabs.net/article_world_view_projection_matrix.aspx" title="World, View and Projection Transformation Matrices">
-    Coding Labs
+  <Resource source="Shader" url="https://www.khronos.org/opengl/wiki/Shader" title="Shader">
+    Shader
   </Resource>
-  <Resource source="Bio Model" url="https://biomodel.uah.es/en/DIY/JSME/draw.es.htm" title="Moleculas en 3 dimensiones">
-  Bio Model
+  <Resource source="Color Vision" url="http://www.daltonize.org/search/label/Javascript" title="Color Vision with JS">
+  Color Vision with JS
   </Resource>
   
 </Resources>

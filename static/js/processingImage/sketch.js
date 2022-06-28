@@ -5,8 +5,8 @@ let video_src;
 
 function preload() {
     img = loadImage('https://visual-computing-1.github.io/visual-site/js/processingImage/bandera2.jpg');
-    maskShader = readShader('http://localhost:8000/js/processingImage/mask.frag', { varyings: Tree.texcoords2 });
-    video_src = createVideo(['http://localhost:8000/js/processingImage/south_park.mp4']);
+    maskShader = readShader('https://visual-computing-1.github.io/visual-site/js/processingImage/mask.frag', { varyings: Tree.texcoords2 });
+    video_src = createVideo(['https://visual-computing-1.github.io/visual-site/js/processingImage/south_park.mp4']);
     video_src.hide()
 }
 
@@ -120,6 +120,11 @@ function draw() {
         maskShader.setUniform('mask', [1, 0, 0, 0, 1, 0, 0, 0, 1]);
     }
     quad(-width / 2, -height / 2, width / 2, -height / 2, width / 2, height / 2, -width / 2, height / 2);
+    if (video_on.checked()) {} else {
+        maskShader.setUniform('texture', img);
+        emitTexOffset(maskShader, img, 'texOffset');
+    }
+
 
 
 }
