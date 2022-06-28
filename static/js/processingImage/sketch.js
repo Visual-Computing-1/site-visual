@@ -15,8 +15,9 @@ function setup() {
     createCanvas(600, 600, WEBGL);
     noStroke();
     textureMode(NORMAL);
-    video_on = createCheckbox('video', false);
-    video_on.style('color', 'white');
+    fill(0, 102, 153);
+    video_on = createCheckbox('Video', false);
+    video_on.style('color', 'black');
     video_on.changed(() => {
         if (video_on.checked()) {
             maskShader.setUniform('texture', video_src);
@@ -29,28 +30,28 @@ function setup() {
     video_on.position(540, 10);
     mask_pro = createCheckbox('Protanopia', false);
     mask_pro.position(10, 10);
-    mask_pro.style('color', 'white');
+    mask_pro.style('color', 'black');
     mask_deu = createCheckbox('Deuteranopia', false);
     mask_deu.position(120, 10);
-    mask_deu.style('color', 'white');
+    mask_deu.style('color', 'black');
     mask_tri = createCheckbox('Tritanopia', false);
     mask_tri.position(260, 10);
-    mask_tri.style('color', 'white');
+    mask_tri.style('color', 'black');
     mask_prot = createCheckbox('Protanomalía', false);
     mask_prot.position(10, 30);
-    mask_prot.style('color', 'white');
+    mask_prot.style('color', 'black');
     mask_deut = createCheckbox('Dueteranomalía', false);
     mask_deut.position(120, 30);
-    mask_deut.style('color', 'white');
+    mask_deut.style('color', 'black');
     mask_trit = createCheckbox('Tritanomalía', false);
     mask_trit.position(260, 30);
-    mask_trit.style('color', 'white');
+    mask_trit.style('color', 'black');
     mask_aniot = createCheckbox('Acromatopsia', false);
     mask_aniot.position(10, 50);
-    mask_aniot.style('color', 'white');
+    mask_aniot.style('color', 'black');
     mask_anio = createCheckbox('Acromatomía', false);
     mask_anio.position(120, 50);
-    mask_anio.style('color', 'white');
+    mask_anio.style('color', 'black');
     shader(maskShader);
     maskShader.setUniform('texture', img);
     emitTexOffset(maskShader, img, 'texOffset');
