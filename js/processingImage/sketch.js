@@ -1,12 +1,13 @@
 let lumaShader;
 let img;
 let grey_scale;
+let video_src;
 
 function preload() {
-    lumaShader = readShader('https://visual-computing-1.github.io/visual-site/js/processingImage/luma.frag', { varyings: Tree.texcoords2 });
     img = loadImage('https://visual-computing-1.github.io/visual-site/js/processingImage/bandera2.jpg');
     maskShader = readShader('https://visual-computing-1.github.io/visual-site/js/processingImage/mask.frag', { varyings: Tree.texcoords2 });
-
+    video_src = createVideo(['https://visual-computing-1.github.io/visual-site/js/processingImage/south_park.mp4']);
+    video_src.hide()
 }
 
 function setup() {
@@ -14,7 +15,7 @@ function setup() {
     createCanvas(600, 600, WEBGL);
     noStroke();
     textureMode(NORMAL);
-    /*video_on = createCheckbox('video', false);
+    video_on = createCheckbox('video', false);
     video_on.style('color', 'white');
     video_on.changed(() => {
         if (video_on.checked()) {
@@ -25,7 +26,7 @@ function setup() {
             video_src.pause();
         }
     });
-    video_on.position(10, 30);*/
+    video_on.position(540, 10);
     mask_pro = createCheckbox('Protanopia', false);
     mask_pro.position(10, 10);
     mask_pro.style('color', 'white');
@@ -51,13 +52,14 @@ function setup() {
     mask_anio.position(120, 50);
     mask_anio.style('color', 'white');
     shader(maskShader);
+    maskShader.setUniform('texture', img);
+    emitTexOffset(maskShader, img, 'texOffset');
+
+
 }
 
 function draw() {
-    background(0);
-    if (img) {
-        image(img, 0, 0, width, height);
-    }
+    background(244, 248, 252);
     if (mask_pro.checked()) {
         mask_deu.checked(false)
         mask_tri.checked(false)
@@ -117,10 +119,13 @@ function draw() {
     } else {
         maskShader.setUniform('mask', [1, 0, 0, 0, 1, 0, 0, 0, 1]);
     }
-
     quad(-width / 2, -height / 2, width / 2, -height / 2, width / 2, height / 2, -width / 2, height / 2);
-    maskShader.setUniform('texture', img);
-    emitTexOffset(maskShader, img, 'texOffset');
+    if (video_on.checked()) {} else {
+        maskShader.setUniform('texture', img);
+        emitTexOffset(maskShader, img, 'texOffset');
+    }
+
+
 
 }
 
