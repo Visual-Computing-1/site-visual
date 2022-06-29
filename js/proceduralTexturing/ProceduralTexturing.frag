@@ -13,15 +13,16 @@ float random(in vec2 coord) {
     return fract(sin(dot(coord.xy, vec2(12.9898,78.233)))* 43758.5453123*u_seed);
 }
 
-vec2 truchetPattern(in vec2 pos, in float index){
-    index = fract(((index-0.5)*2.0));
-    if (index > 0.75) {
-        pos = vec2(1.0) - pos;
-    } else if (index > 0.5) {
+vec2 truchetPattern(in vec2 pos, in float rand){
+    rand = fract(((rand-0.5)*2.0));
+    if (rand > 0.75) { //  [/]
+        pos = vec2(1.0) - pos; 
+    } else if (rand > 0.5) { // [\]
         pos = vec2(1.0-pos.x, pos.y);
-    } else if (index > 0.25) {
+    } else if (rand > 0.25) { //  [/]
         pos = 1.0-vec2(1.0-pos.x, pos.y);
     }
+    // [/] or [\] 
     return pos;
 }
 
