@@ -44,6 +44,14 @@ Hay diferentes causas de daltonismo. Para la mayoría de las personas con defici
 
 ## Revisión de la Literatura / Antecedentes
 
+### Entrega 1
+
+De acuerdo a lo practicado en la entrega 1, cuyo tema era corrección de colores para imágenes vistas por personas daltónicas, se decidió implementar este algoritmo (LMS algorithm) para generar la corrección de color en tres tipos de daltonismo. 
+
+El método de implementación inicialmente era realizar recorridos de toda la imagen usando dos ciclos for, validando el ancho y alto de la imagen; dicho proceso consumía tiempo adicional y podía ser lento para imágenes pesadas o de alta definición.
+
+Sin embargo, con el uso de shaders este proceso se puede optimizar. Permitiendo al hardware reemplazar lo ciclos for usados en la primera entrega.
+
 ### Algoritmo 1: Filtros en cada pixel.
 
 Entrada: imagen de entrada RGB
@@ -158,5 +166,14 @@ void main() {
   <Resource source="Color Vision" url="http://www.daltonize.org/search/label/Javascript" title="Color Vision with JS">
   Color Vision with JS
   </Resource>
-  
+      <Resource source="Research Gate" url="https://www.researchgate.net/publication/326626897_Smartphone_Based_Image_Color_Correction_for_Color_Blindness" title="Smartphone Based Image Color Correction for Color Blindness">
+        Lamiaa A. Elrefaei
+    </Resource>
+
+      <Resource source="Coblis" url="https://www.color-blindness.com/coblis-color-blindness-simulator" title="Color Blindness Simulator
+">
+        Color Blindness Simulator
+    </Resource>
+
+
 </Resources>

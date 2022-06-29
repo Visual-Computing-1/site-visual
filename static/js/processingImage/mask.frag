@@ -8,8 +8,6 @@ uniform float mask_correction[9];
 uniform float error_matrix[9];
 uniform vec2 mouse_position;
 uniform float filter_selected;
-uniform bool grey_scale;
-
 
 
 // we need our interpolated tex coord
@@ -130,8 +128,6 @@ vec3 applyFilters() {
 
   }
 }
-
-
 
 void main() {
     gl_FragColor = vec4(applyFilters(), 1.0);
