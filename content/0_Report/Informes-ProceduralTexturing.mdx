@@ -39,47 +39,130 @@ Como observamos anteriormente existen múltiples algoritmos para la generación 
 En el siglo XVIII el cura dominico frances Sébastien Truchet qué estaba muy interesado en los patrones qué se podían formar con las baldosas, para formar figuras geométricas novedosas con ellas. Empezó dividiendo las baldosas por la mitad en diagonal y las pintaba solo la mitad.
 
 <center>
-  <img src="http://localhost:8000/img/Baldosa-de-Truchet.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Baldosa-de-Truchet.png" />
 </ center>
 
 Después de ello se dió a la gran tarea de contar el número de distintas formas qué se pueden formar utilizando dos baldosas, rotandolas cada una. Sé dio cuenta qué se podian generar 54 patrones y el los agrupo en 10 grupos como se puede ver en la (imagen x)
 
 <center>
-  <img src="http://localhost:8000/img/Truchet-Table.png" width="70%" height="70%" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Truchet-Table.png" width="70%" height="70%" />
 </ center>
 
 El número posible de combinaciones es muy grande y muchas de ellas tienen algún tipo de simetría qué puede ser interesante observar, como lo realizó Truchet  en la siguiente imagen:
 
 <center>
-  <img src="http://localhost:8000/img/Truchet-Figure.png" width="70%" height="70%" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Truchet-Figure.png" width="70%" height="70%" />
 </ center>
 
 Casi 300 Años después el ingeniero metalúrgico Cyril Stanley Smith en un proyecto como profesor de la universidad escribió un artículo científico relacionado y en continuación al trabajo de Truchet relacionándolos con los efectos de la materia y introduciendo de la misma forma unos diseños sencillos pero interesantes qué se combinan entre sí, consiguiendo un entramado de zonas abiertas y cerradas similares a un laberinto como lo puede ver a continuación:
 
 <center>
-  <img src="http://localhost:8000/img/Tile-1.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Tile-1.png" />
 </ center>
 
 <center>
-  <img src="http://localhost:8000/img/Maze.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Maze.png" />
 </ center>
 
 Únicamente cambiando el diseño de una baldosa, se pueden formar laberintos geométricamente diferentes como se puede observar en la imagen de abajo. 
 
 <center>
-  <img src="http://localhost:8000/img/Tile-Square.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Tile-Square.png" />
 </ center>
 
 <center>
-  <img src="http://localhost:8000/img/Maze-Square.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Maze-Square.png" />
 </ center>
 
 Así mismo, cambiando la baldosa utilizando una, dos y más líneas diagonales y circulares, se pueden conseguir muchas figuras geométricas con geometrías complejas pero estéticamente interesantes.
 
 <center>
-  <img src="http://localhost:8000/img/Types.png" />
+  <img src="https://visual-computing-1.github.io/visual-site/img/Types.png" />
 </ center>
 
+## Funciones e Interpolaciones utilizadas
+
+### Step `step(edge, x)`
+
+Generar una función escalonada
+<center>
+  <img src="https://visual-computing-1.github.io/visual-site/img/step_function.png" />
+</ center>
+
+Para el elemento `i` del valor devuelve, `0.0` Si `x[i] < edge[i]` y `1.0` en caso contrario.
+
+
+### Smoothstep `smoothstep(edge0, edge1, x)`
+
+Realizar la interpolación de Hermite entre dos valores
+
+<center>
+  <img src="https://visual-computing-1.github.io/visual-site/img/smoothstep.png" />
+</ center>
+
+Devuelve `0.0` si el valor de `i` está antes del rango `edge1 <= x <= edge2`, devuelve `1.0` si el valor de `i` está después de ese rango y realiza la interpolación suave de Hermite en cualquier otro caso.
+
+## Patrón de Truchet (`codigo`)
+
+```java
+vec2 truchetPattern(in vec2 pos, in float rand){
+    rand = fract(((rand-0.5)*2.0));
+    if (rand > 0.75) { //  [/]
+        pos = vec2(1.0) - pos; 
+    } else if (rand > 0.5) { // [\]
+        pos = vec2(1.0-pos.x, pos.y);
+    } else if (rand > 0.25) { //  [/]
+        pos = 1.0-vec2(1.0-pos.x, pos.y);
+    }
+    // [/] or [\] 
+    return pos;
+}
+```
+
+### Generación de Laberinto
+
+<center>
+  <img src="https://visual-computing-1.github.io/visual-site/img/Tile-2.png" />
+</ center>
+
+```java
+vec2 tile = truchetPattern(fpos, random(ipos));
+// Pintamos la linea diagonal de grosor 0.6
+color = smoothstep(tile.x - 0.3, tile.x, tile.y) - smoothstep(tile.x, tile.x + 0.3, tile.y);
+```
+
+### Generación de Laberinto Circular
+
+<center>
+  <img src="https://visual-computing-1.github.io/visual-site/img/Tile-Square-2.png" />
+</ center>
+
+```java
+vec2 tile = truchetPattern(fpos, random(ipos));
+color = (
+    (
+        step(length(tile), 0.6) -
+        step(length(tile), 0.4)
+    ) +
+    (
+        step(length(tile - vec2(1.0)), 0.6) -
+        step(length(tile - vec2(1.0)), 0.4)
+    )
+);
+```
+
+### Generación de Laberinto utilizando Triángulos
+
+<center>
+  <img src="https://visual-computing-1.github.io/visual-site/img/Baldosa-de-Truchet-2.png" />
+</ center>
+
+```java
+vec2 tile = truchetPattern(fpos, random(ipos));
+color = step(tile.x, tile.y);
+```
+
+---
 A continuación se encuentra la implementación de los Patrones de Truchet en p5.js y Fragment Shader, para la generación de laberintos aleatorios utilizando diferentes baldosas:
 
 <center>
@@ -101,7 +184,7 @@ const PADDING = SIDE / 4;
 let u_seed;
 
 function preload(){
-  sh = readShader("http://localhost:8000/js/proceduralTexturing/ProceduralTexturing.frag")
+  sh = readShader("https://visual-computing-1.github.io/visual-site/js/proceduralTexturing/ProceduralTexturing.frag")
 }
 
 function setup() {
@@ -166,13 +249,13 @@ float random(in vec2 coord) {
     return fract(sin(dot(coord.xy, vec2(12.9898,78.233)))* 43758.5453123*u_seed);
 }
 
-vec2 truchetPattern(in vec2 pos, in float index){
-    index = fract(((index-0.5)*2.0));
-    if (index > 0.75) {
+vec2 truchetPattern(in vec2 pos, in float rand){
+    rand = fract(((rand-0.5)*2.0));
+    if (rand > 0.75) {
         pos = vec2(1.0) - pos;
-    } else if (index > 0.5) {
+    } else if (rand > 0.5) {
         pos = vec2(1.0-pos.x, pos.y);
-    } else if (index > 0.25) {
+    } else if (rand > 0.25) {
         pos = 1.0-vec2(1.0-pos.x, pos.y);
     }
     return pos;
@@ -217,7 +300,7 @@ void main() {
       <head>
         <script src=https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js></script>
         <script src=https://cdn.jsdelivr.net/gh/VisualComputing/p5.treegl/p5.treegl.js></script> 
-        <script src='http://localhost:8000/js/proceduralTexturing/sketch.js'></script>
+        <script src='https://visual-computing-1.github.io/visual-site/js/proceduralTexturing/sketch.js'></script>
       </head>
       <body>
       </body>
