@@ -4,6 +4,7 @@ let grey_scale;
 let video_src;
 let sel;
 let sel2;
+let sel3;
 
 function preload() {
     img = loadImage('https://visual-computing-1.github.io/visual-site/js/processingImage/bandera2.jpg');
@@ -33,7 +34,7 @@ function setup() {
     sel.position(10, 10);
     sel.option('Normal');
     sel.option('Protanopía');
-    sel.option('Deuteranopia');
+    sel.option('Deuteranopía');
     sel.option('Tritanopía');
     sel.option('Protanomalía');
     sel.option('Deuteranomalía');
@@ -52,6 +53,13 @@ function setup() {
     sel2.option('Lente');
     sel2.selected('Total');
 
+    sel3 = createSelect();
+    sel3.position(240, 10);
+    sel3.option('Sin Corrección');
+    sel3.option('Protanopía');
+    sel3.option('Deuteranopía');
+    sel3.option('Tritanopía');
+    sel3.selected('Sin Corrección');
 
 }
 
@@ -65,9 +73,26 @@ function draw() {
     } else if (sel2.value() == "Total") {
         maskShader.setUniform('filter_selected', 2);
     }
+
+    if (sel3.value() == "Protanopía") {
+        maskShader.setUniform('filter_selected', 0);
+        maskShader.setUniform('mask_correction', [0.0, 2.02344, -2.52581, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]);
+        maskShader.setUniform('error_matrix', [0.0, 0.0, 0.0, 0.7, 1.0, 0.0, 0.7, 0.0, 1.0]);
+    } else if (sel3.value() == "Deuteranopía") {
+        maskShader.setUniform('filter_selected', 0);
+        maskShader.setUniform('mask_correction', [1.0, 0.0, 0.0, 0.494207, 0.0, 1.24827, 0.0, 0.0, 1.0]);
+        maskShader.setUniform('error_matrix', [1.0, 0.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 1.0]);
+
+    } else if (sel3.value() == "Tritanopía") {
+        maskShader.setUniform('filter_selected', 0);
+        maskShader.setUniform('mask_correction', [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.395913, 0.801109, 0.0]);
+        maskShader.setUniform('error_matrix', [1.0, 0.0, 0.7, 0.0, 1.0, 0.7, 0.0, 0.0, 0.0]);
+
+    }
+
     if (sel.value() == "Protanopía") {
         maskShader.setUniform('mask', [0.567, 0.433, 0.0, 0.558, 0.442, 0.0, 0.0, 0.242, 0.758]);
-    } else if (sel.value() == "Deuteranopia") {
+    } else if (sel.value() == "Deuteranopía") {
         maskShader.setUniform('mask', [0.625, 0.375, 0.0, 0.7, 0.3, 0.0, 0.0, 0.3, 0.7]);
     } else if (sel.value() == "Tritanopía") {
         maskShader.setUniform('mask', [0.95, 0.05, 0.0, 0.0, 0.433, 0.567, 0.0, 0.475, 0.525]);
